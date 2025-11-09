@@ -1,0 +1,194 @@
+    body {
+      background-color: #f2f5fa;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand img {
+      height: 45px;
+      margin-right: 8px;
+    }
+
+    .lab-img {
+      border-radius: 8px;
+      height: 186px;
+      width: 330px;
+      object-fit: cover;
+    }
+
+    .navbar-nav .nav-link {
+      font-weight: 600;
+      color: #333;
+      margin: 0 8px;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #004aad;
+    }
+
+    /* Header Text */
+    .hero {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .hero h4 {
+      font-weight: 700;
+      color: #000;
+    }
+
+    .hero p {
+      color: #555;
+      font-size: 15px;
+    }
+    /* Boox Lab */
+    .box-lab{
+      padding-top: 20px;
+      padding-bottom: 17px;
+    }
+    .pemisah-box{
+      padding-left: 23px;
+    }
+
+    /* Stat Cards */
+    .card-custom {
+      background-color: #fff;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .stats .card {
+      border: none;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+
+    .stats .card h2 {
+      color: #004aad;
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .highlight {
+      color: #0069d9;
+    }
+
+    /* Filter */
+    .filter {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Location */
+    .location {
+      background-color: #e7f1ff;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* Lab Cards */
+    .lab-card {
+      background-color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .lab-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+    }
+
+    .lab-info p {
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .lab-info button {
+      background-color: #004aad;
+      border: none;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .lab-info button:hover {
+      background-color: #0069d9;
+    }
+
+    /* Latest Booking */
+    .latest {
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+    .latest-box {
+      border: 1px solid #a0aec0;
+      border-radius: 8px;
+      padding: 10px 15px;
+      background: white;
+      margin-bottom: 10px;
+    }
+    .latest-time {
+      color: #f87171;
+      font-weight: 600;
+    }
+    .badge-time {
+      background: #e0f2fe;
+      color: #334155;
+      font-size: 0.8rem;
+    }
+    .latest h5 {
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .latest-card {
+      background-color: #f9fbff;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #d9e3f0;
+    }
+
+    .latest-card h6 {
+      color: #004aad;
+      font-weight: 600;
+    }
+
+    .latest-card small {
+      color: #777;
+      font-size: 12px;
+    }
+
+    footer {
+      background-color: #0a0a23;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
