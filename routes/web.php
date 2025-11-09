@@ -18,13 +18,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
 // DASHBOARD CONTOH
 Route::get('/admin/dashboard', function () {
-    return view('dashboard.admin');
+    return view('dashboard.admin.admin');
 })->name('admin.dashboard')->middleware('auth');
 
 Route::get('/user/dashboard', function () {
-    return view('dashboard.user');
+    return view('dashboard.user.user');
 })->name('user.dashboard')->middleware('auth');
 
+Route::get('/mahasiswa/dashboard', function () {
+    return view('dashboard.mahasiswa.mahasiswa');
+})->name('mahasiswa.dashboard')->middleware('auth');
+
 Route::get('/guest/dashboard', function () {
-    return view('dashboard.guest');
+    return view('dashboard.guest.guest');
 })->name('guest.dashboard')->middleware('auth');
