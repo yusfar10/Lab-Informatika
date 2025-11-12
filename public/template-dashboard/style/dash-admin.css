@@ -1,0 +1,53 @@
+.ukuranlogo{
+  width: 42px;
+}
+        body {
+            background-color: #f5f7fa;
+            font-family: 'poppins';
+        }
+
+        nav.navbar {
+            background-color: #243447;
+        }
+
+        nav.navbar a.nav-link,
+        nav.navbar .navbar-brand {
+            color: #ffffff !important;
+        }
+
+        .selamat {
+            font-size: 32px;
+        }
+
+        .f24 {
+            font-size: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        footer {
+            background-color: #243447;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-primary,
+        .btn-outline-success,
+        .btn-outline-warning,
+        .btn-outline-danger {
+            border-radius: 8px;
+        }
+
+        .btn1 {
+            border-radius: 10px;
+        }
+
+        .fw-semibold {
+            font-weight: 600;
+        }
+
+        .warna-reset {
+            color: #986203;
+        }

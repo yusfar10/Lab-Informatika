@@ -15,10 +15,9 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg px-4 ">
     <a class="navbar-brand d-flex align-items-center" href="#">
       <img src="{{ asset('template-dashboard/img/logo.png') }}" alt="Logo">
-      <strong>Dashboard User</strong>
     </a>
     <div class="ms-auto">
       <ul class="navbar-nav d-flex align-items-center">
