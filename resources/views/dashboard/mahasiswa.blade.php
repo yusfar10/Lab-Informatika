@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Informacis Lab</title>
 
-  <link rel="icon" type="image/png" href="{{ asset('template-dashboard/img/logo.png') }}">
+  <link rel="icon" type="image" href="{{ asset('images/LogoInformatics.png') }}">
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +17,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg px-4 ">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{{ asset('template-dashboard/img/logo.png') }}" alt="Logo">
+      <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
     </a>
     <div class="ms-auto">
       <ul class="navbar-nav d-flex align-items-center">

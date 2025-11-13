@@ -13,7 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ asset('template-dashboard/img/logo.png') }}">
+    <link rel="icon" type="image" href="{{ asset('images/LogoInformatics.png') }}">
     <link rel="stylesheet" href="{{ asset('template-dashboard/style/dash-admin.css') }}">
 </head>
 
@@ -22,7 +22,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg px-4">
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="{{ asset('template-dashboard/img/logo.png') }} "class="ukuranlogo" alt="Logo">
+            <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }} "class="ukuranlogo" alt="Logo">
             <strong>ADMIN PANEL</strong>
         </a>
         <div class="ms-auto">
