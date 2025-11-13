@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+        }
+        .navbar {
+            background-color: #22304A;
+        }
+        .navbar-brand img {
+            width: 40px;
+            height: 40px;
+        }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            margin-right: 20px;
+        }
+        .navbar-nav .nav-link.active {
+            color: #00AEEF !important;
+        }
+        .content-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .footer {
+            background-color: #22304A;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 53px;
+        }
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            object-fit: cover;
+        }
+        .btn-check-blue {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: 500;
+            border-radius: 20px;
+            padding: 5px 20px;
+        }
+        .badge-status {
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            font-weight: 500;
+        }
+        .bg-blue { background-color: #007bff; }
+        .bg-green { background-color: #28a745; }
+        .bg-red { background-color: #dc3545; }
+        .bg-warning { background-color: #ffc107; color: #000; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="../logo.png" alt="Logo">
+                <span class="text-white ms-2 fw-bold">ADMIN PANEL</span>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Booking Class</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Riwayat</a></li>
+                    <li class="nav-item ms-3">
+                        <img src="../user.png" alt="Profile" class="profile-pic">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-4">
+        <div class="content-box">
+            <h5 class="fw-bold">Booking History</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select">
+                        <option>All</option>
+                        <option>Aktif</option>
+                        <option>Nonaktif</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-check-blue w-100">Check</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Nama Pengguna</th>
+                            <th>Ruangan</th>
+                            <th>Booking Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025/11/05 20:44:10</td>
+                            <td>Nama Kosma - 3A</td>
+                            <td>Lab 2</td>
+                            <td>3 SKS</td>
+                            <td><span class="badge-status bg-blue">Ms Pemb</span></td>
+                        </tr>
+                        <tr>
+                            <td>2025/11/05 20:44:10</td>
+                            <td>HIMAFOR - EDT</td>
+                            <td>Lab 1</td>
+                            <td>3 SKS</td>
+                            <td><span class="badge-status bg-red">Report Rusak</span></td>
+                        </tr>
+                        <tr>
+                            <td>2025/11/05 20:44:10</td>
+                            <td>Nama Kosma - 3A</td>
+                            <td>Lab 1</td>
+                            <td>4 SKS</td>
+                            <td><span class="badge-status bg-green">Mk APSI</span></td>
+                        </tr>
+                        <tr>
+                            <td>2025/11/05 20:44:10</td>
+                            <td>Nama Kosma - 3A</td>
+                            <td>Lab 1</td>
+                            <td>1 SKS</td>
+                            <td><span class="badge-status bg-blue">Mk SPK</span></td>
+                        </tr>
+                        <tr>
+                            <td>2025/11/05 20:44:10</td>
+                            <td>Nama Kosma - 3A</td>
+                            <td>Lab 1</td>
+                            <td>3 SKS</td>
+                            <td><span class="badge-status bg-blue">Mk NP</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p class="mb-0">Copyright © Kelompok 1 - Manajemen Proyek</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
