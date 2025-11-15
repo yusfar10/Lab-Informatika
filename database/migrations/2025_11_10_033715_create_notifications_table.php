@@ -9,13 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+   public function up(): void
+{
+    Schema::create('notification', function (Blueprint $table) {
+        $table->id('notification_id');
+        $table->unsignedBigInteger('user_id');
+        $table->text('pesan');
+        $table->dateTime('notification_time');
+        $table->boolean('is_read')->default(false);
+        $table->timestamps();
+
+        $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+    });
+}
+
 
     /**
      * Reverse the migrations.

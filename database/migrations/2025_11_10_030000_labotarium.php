@@ -9,19 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('laboratoria', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+   public function up(): void
+{
+    Schema::create('laboratorium', function (Blueprint $table) {
+        $table->id('room_id');
+        $table->string('room_name', 100);
+        $table->boolean('is_available')->default(true);
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('laboratoria');
+        //
     }
 };
