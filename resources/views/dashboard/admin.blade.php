@@ -43,7 +43,7 @@
         <!-- Header -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="d-block justify-content-between align-items-center mb-3 pt-5 pb-4">
-                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, Kosma!</h5>
+                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, Admin!</h5>
                 <small class="text-muted ps-5 fs-5">Sistem berjalan normal - terakhir back up: 2 jam lalu</small>
             </div>
         </div>

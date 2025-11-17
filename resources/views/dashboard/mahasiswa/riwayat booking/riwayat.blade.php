@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking History - Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image" href="{{ asset('images/LogoInformatics.png') }}">
     <style>
         html, body {
             height: 100%;
@@ -72,6 +73,9 @@
         .bg-green { background-color: #28a745; }
         .bg-red { background-color: #dc3545; }
         .bg-warning { background-color: #ffc107; color: #000; }
+        .main1{
+            height: 600px;
+        }
     </style>
 </head>
 <body>
@@ -80,8 +84,7 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../logo.png" alt="Logo">
-                <span class="text-white ms-2 fw-bold">ADMIN PANEL</span>
+                <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
             </a>
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav align-items-center">
@@ -90,7 +93,7 @@
                     <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
                     <li class="nav-item"><a class="nav-link active" href="#">Riwayat</a></li>
                     <li class="nav-item ms-3">
-                        <img src="../user.png" alt="Profile" class="profile-pic">
+                        <img src="{{ asset('template-dashboard/img/user.png') }}" alt="Profile" class="profile-pic">
                     </li>
                 </ul>
             </div>
@@ -98,7 +101,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container my-4">
+    <div class="container main1 my-4">
         <div class="content-box">
             <h5 class="fw-bold">Booking History</h5>
             <div class="row mb-3">
