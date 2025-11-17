@@ -28,8 +28,8 @@
         <div class="ms-auto">
             <ul class="navbar-nav d-flex align-items-center">
                 <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="ruangadmin.blade.php">Ruang</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">User</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.ruang') }}">Ruang</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.user') }}">User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Boking</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Sistem</a></li>

@@ -24,7 +24,7 @@
         <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Booking Class</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
         <li class="nav-item"><img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle ms-3" width="40"></li>
       </ul>
     </div>
