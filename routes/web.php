@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 // LOGIN
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -37,4 +38,10 @@ Route::get('/mahasiswa/riwayat', function () {
 Route::get('/guest/dashboard', function () {
     return view('dashboard.guest.guest');
 })->name('guest.dashboard')->middleware('auth');
+
+// PASSWORD RESET ROUTES
+Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
