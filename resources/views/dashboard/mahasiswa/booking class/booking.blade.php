@@ -7,9 +7,14 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image" href="{{ asset('template-dashboard/img/LogoInformatics.png') }}">
 
     <style>
-        body { background-color: #f2f4f7; }
+        body { 
+            background-color: #f2f4f7;
+            padding-top: 70px; 
+            font-family: 'poppins';
+        }
 
         .navbar {
             background-color: #0c2340 !important;
@@ -72,6 +77,13 @@
         .lonceng{
           width: 18px;
         }
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
 
         footer {
             background-color: #0c2340;
@@ -86,24 +98,24 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../LogoInformatics.png" width="40" class="me-2">
+                <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" width="40" class="me-2">
             </a>
 
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Booking Class</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.dashboard') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
                     <li class="nav-item">
-                        <img src="../user.png" class="rounded-circle" style="width:40px;">
+                        <img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle" style="width:40px;">
                         <!-- https://i.pravatar.cc/40 -->
                     </li>
                     <li class="nav-item position-relative d-flex align-items-center" style="cursor:pointer; margin-left: 10px;">
-                        <img src="../Vector.png" class="lonceng" alt="">
+                        <img src="{{ asset('template-dashboard/img/Vector.png') }}" class="lonceng" alt="">
 
                         <span class="position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle "
                               style="font-size: 11px; padding:1px 6px;">

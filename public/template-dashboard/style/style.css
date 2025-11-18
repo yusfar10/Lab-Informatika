@@ -1,6 +1,7 @@
     body {
       background-color: #f2f5fa;
       font-family: 'Poppins', sans-serif;
+      padding-top: 70px;
     }
 
     /* Navbar */
@@ -182,6 +183,13 @@
     .latest-card small {
       color: #777;
       font-size: 12px;
+    }
+    .navbar-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9999;
     }
 
     footer {

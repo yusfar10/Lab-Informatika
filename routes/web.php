@@ -35,6 +35,14 @@ Route::get('/mahasiswa/riwayat', function () {
     return view('dashboard.mahasiswa.riwayat booking.riwayat');
 })->name('mahasiswa.riwayat')->middleware('auth');
 
+Route::get('/mahasiswa/booking-kelas', function () {
+    return view('dashboard.mahasiswa.booking class.booking');
+})->name('mahasiswa.booking-kelas')->middleware('auth');
+
+Route::get('/mahasiswa/jadwal-kuliah', function () {
+    return view('dashboard.mahasiswa.riwayat booking.riwayat');
+})->name('mahasiswa.jadwal-kuliah')->middleware('auth');
+
 Route::get('/guest/dashboard', function () {
     return view('dashboard.guest.guest');
 })->name('guest.dashboard')->middleware('auth');

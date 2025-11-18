@@ -15,6 +15,7 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
+            padding-top:70px;
         }
         main {
             flex: 1;
@@ -76,24 +77,42 @@
         .main1{
             height: 600px;
         }
+        .lonceng{
+          width: 18px;
+        }
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-fixed navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
             </a>
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Booking Class</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.dashboard') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Riwayat</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
                     <li class="nav-item ms-3">
                         <img src="{{ asset('template-dashboard/img/user.png') }}" alt="Profile" class="profile-pic">
+                    </li>
+                    <li class="nav-item position-relative d-flex align-items-center" style="cursor:pointer; margin-left: 10px;">
+                        <img src="{{ asset('template-dashboard/img/Vector.png') }}" class="lonceng" alt="">
+
+                        <span class="position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle "
+                              style="font-size: 11px; padding:1px 6px;">
+                            3
+                        </span>
                     </li>
                 </ul>
             </div>
