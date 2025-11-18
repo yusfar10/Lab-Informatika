@@ -23,9 +23,9 @@ Route::get('/admin/user', function () {
     return view('dashboard.admin.user admin.user_admin');
 })->name('admin.user')->middleware('auth');
 
-Route::get('/user/dashboard', function () {
-    return view('dashboard.user.user');
-})->name('user.dashboard')->middleware('auth');
+// Route::get('/user/dashboard', function () {
+//     return view('dashboard.user.user');
+// })->name('user.dashboard')->middleware('auth');
 
 Route::get('/mahasiswa/dashboard', function () {
     return view('dashboard.mahasiswa');

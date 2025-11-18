@@ -15,7 +15,7 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-fixed navbar-expand-lg px-4 ">
+  {{-- <nav class="navbar navbar-fixed navbar-expand-lg px-4 ">
     <a class="navbar-brand d-flex align-items-center" href="#">
       <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
     </a>
@@ -28,7 +28,8 @@
         <li class="nav-item"><img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle ms-3" width="40"></li>
       </ul>
     </div>
-  </nav>
+  </nav> --}}
+  @include('dashboard.nav.nav-mahasiswa')
 
   <!-- Main Content -->
   <div class="container mt-4">

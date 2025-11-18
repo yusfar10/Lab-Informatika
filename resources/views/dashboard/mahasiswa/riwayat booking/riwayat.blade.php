@@ -16,24 +16,26 @@
             display: flex;
             flex-direction: column;
             padding-top:70px;
+            
         }
         main {
             flex: 1;
         }
         .navbar {
-            background-color: #22304A;
+            background-color: #1a263e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .navbar-brand img {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            margin-right: 8px;
         }
         .navbar-nav .nav-link {
-            color: #fff !important;
-            font-weight: 500;
-            margin-right: 20px;
+            color: #fff;
+            font-weight: 600;
+            margin: 0 8px;
         }
-        .navbar-nav .nav-link.active {
-            color: #00AEEF !important;
+        .navbar-nav .nav-link:hover {
+            color: #004aad;
         }
         .content-box {
             background: #fff;
@@ -92,32 +94,7 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-fixed navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
-            </a>
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.dashboard') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
-                    <li class="nav-item ms-3">
-                        <img src="{{ asset('template-dashboard/img/user.png') }}" alt="Profile" class="profile-pic">
-                    </li>
-                    <li class="nav-item position-relative d-flex align-items-center" style="cursor:pointer; margin-left: 10px;">
-                        <img src="{{ asset('template-dashboard/img/Vector.png') }}" class="lonceng" alt="">
-
-                        <span class="position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle "
-                              style="font-size: 11px; padding:1px 6px;">
-                            3
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('dashboard.nav.nav-mahasiswa')
 
     <!-- Main Content -->
     <div class="container main1 my-4">

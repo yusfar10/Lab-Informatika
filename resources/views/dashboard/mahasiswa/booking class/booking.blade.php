@@ -17,13 +17,20 @@
         }
 
         .navbar {
-            background-color: #0c2340 !important;
-            padding: 14px;
+            background-color: #1a263e !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .navbar a {
-            color: white !important;
-            margin-right: 18px;
-            font-size: 15px;
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 8px;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: #fff;
+            margin: 0 8px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #004aad;
         }
 
         .card-left {
@@ -96,37 +103,7 @@
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" width="40" class="me-2">
-            </a>
-
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.dashboard') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Jadwal Kuliah</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
-                    <li class="nav-item">
-                        <img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle" style="width:40px;">
-                        <!-- https://i.pravatar.cc/40 -->
-                    </li>
-                    <li class="nav-item position-relative d-flex align-items-center" style="cursor:pointer; margin-left: 10px;">
-                        <img src="{{ asset('template-dashboard/img/Vector.png') }}" class="lonceng" alt="">
-
-                        <span class="position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle "
-                              style="font-size: 11px; padding:1px 6px;">
-                            3
-                        </span>
-                    </li>
-                  </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('dashboard.nav.nav-mahasiswa')
 
     <!-- CONTENT -->
     <div class="container-fluid p-4">
