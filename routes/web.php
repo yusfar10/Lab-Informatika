@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\PasswordResetController;
 
 // LOGIN
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -40,7 +40,7 @@ Route::get('/mahasiswa/booking-kelas', function () {
 })->name('mahasiswa.booking-kelas')->middleware('auth');
 
 Route::get('/mahasiswa/jadwal-kuliah', function () {
-    return view('dashboard.mahasiswa.riwayat booking.riwayat');
+    return view('dashboard.mahasiswa.riwayat-booking.riwayat');
 })->name('mahasiswa.jadwal-kuliah')->middleware('auth');
 
 Route::get('/guest/dashboard', function () {
@@ -52,4 +52,5 @@ Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequest
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+
 
