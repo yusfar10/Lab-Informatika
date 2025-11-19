@@ -40,7 +40,7 @@ Route::get('/mahasiswa/booking-kelas', function () {
 })->name('mahasiswa.booking-kelas')->middleware('auth');
 
 Route::get('/mahasiswa/jadwal-kuliah', function () {
-    return view('dashboard.mahasiswa.riwayat-booking.riwayat');
+    return view('dashboard.mahasiswa.jadwal-kuliah.jadwal');
 })->name('mahasiswa.jadwal-kuliah')->middleware('auth');
 
 Route::get('/guest/dashboard', function () {

@@ -91,6 +91,10 @@
             width: 100%;
             z-index: 9999;
         }
+        .notifikasi{
+            width: 24px;
+            margin-left: 18px;
+        }
 
         footer {
             background-color: #0c2340;
@@ -99,7 +103,45 @@
             text-align: center;
             margin-top: 40px;
         }
+        .schedule-table th {
+            background-color: #0d2a4d;
+            color: white;
+            text-align: center;
+        }
+
+        .schedule-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px;
+        }
+
+        .badge-green {
+            background: #a8efb4;
+            color: #0d6d24;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .badge-red {
+            background: #ffb6b6;
+            color: #8a0000;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .schedule-table {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
     </style>
+
 </head>
 
 <body>
@@ -164,8 +206,13 @@
 
                     <div class="col-md-4">
                         <label>Pilih Laboratorium</label>
-                        <input type="text" class="form-control">
+                        <select class="form-select">
+                            <option selected disabled>Pilih Laboratorium</option>
+                            <option value="lab1">Lab Komputer 1</option>
+                            <option value="lab2">Lab Komputer 2</option>
+                        </select>
                     </div>
+
 
                     <div class="col-md-4">
                         <label class="d-block">Tampilkan</label>
@@ -188,145 +235,26 @@
                         </thead>
 
                         <tbody>
-                            <!-- ROW TEMPLATE -->
                             <tr>
                                 <td>07:00 - 07:30</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-red toggle-slot">Penuh</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
                             </tr>
+
                             <tr>
                                 <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                            </tr>
-                            <tr>
-                                <td>07:30 - 08:00</td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-red">Penuh</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
-                                <td><span class="badge-green">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-red toggle-slot">Penuh</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
+                                <td><span class="badge-green toggle-slot">Tersedia</span></td>
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
             </div>
 
@@ -336,6 +264,24 @@
     <footer>
         Copyright © Kelompok 1 - Manajemen Proyek
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.querySelectorAll('.toggle-slot').forEach(slot => {
+        slot.addEventListener('click', function () {
+            if (this.classList.contains('badge-green')) {
+                this.classList.remove('badge-green');
+                this.classList.add('badge-red');
+                this.textContent = "Penuh";
+            } else {
+                this.classList.remove('badge-red');
+                this.classList.add('badge-green');
+                this.textContent = "Tersedia";
+            }
+        });
+    });
+    </script>
+
+
 
 </body>
 </html>

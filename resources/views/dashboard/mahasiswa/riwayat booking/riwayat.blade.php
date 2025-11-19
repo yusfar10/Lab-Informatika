@@ -89,6 +89,10 @@
             width: 100%;
             z-index: 9999;
         }
+        .notifikasi{
+            width: 24px;
+            margin-left: 18px;
+        }
     </style>
 </head>
 <body>

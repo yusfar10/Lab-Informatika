@@ -8,7 +8,28 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.jadwal-kuliah') }}">Jadwal Kuliah</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
-        <li class="nav-item"><img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle ms-3" width="40"></li>
+        <!-- DROPDOWN PROFIL -->
+            <li class="nav-item dropdown">
+                <a href="#" class="d-flex align-items-center" id="profileDropdown"
+                   data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                    <img src="{{ asset('template-dashboard/img/user.png') }}"
+                         class="rounded-circle ms-3" width="40" alt="User">
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li>
+                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                           Logout
+                        </a>
+                        
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        <li class="nav-item"><img src="{{ asset('template-dashboard/img/Vector.png') }}" class="notifikasi" width="40"></li>
       </ul>
     </div>
   </nav>

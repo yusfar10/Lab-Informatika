@@ -121,26 +121,6 @@
       </div>
 
       <!-- Right: Latest Booking -->
-      <!-- <div class="col-md-4">
-        <div class="latest">
-          <h5>LATEST BOOKING ROOM!</h5>
-          <div class="latest-card">
-            <h6>Lab Komputer 1</h6>
-            <p>09.00 - 10.00<br>Pembelajaran MK Pak Saluki<br><span>oleh: Kosma 5A</span></p>
-            <small>Dipesan 5 menit yang lalu</small>
-          </div>
-          <div class="latest-card">
-            <h6>Lab Komputer 2</h6>
-            <p>10.00 - 11.00<br>Pembelajaran MK Pak Saluki<br><span>oleh: Kosma 5A</span></p>
-            <small>Dipesan 37 menit yang lalu</small>
-          </div>
-          <div class="latest-card">
-            <h6>Lab Komputer 1</h6>
-            <p>13.00 - 15.30<br>Izin mau pakai buat MK Alpro 2 ya kk<br><span>oleh: Kosma 5A</span></p>
-            <small>Dipesan 1 jam yang lalu</small>
-          </div>
-        </div>
-      </div> -->
       <div class="col-lg-4">
         <div class="card-custom p-3">
           <h6 class="card-header-custom mb-3">LATEST BOOKING ROOM!</h6>
@@ -175,5 +155,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
