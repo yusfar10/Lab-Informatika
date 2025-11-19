@@ -14,6 +14,7 @@ use App\Http\Controllers\ChangeRequestController;
 use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\LogActivityController;
+use App\Http\Controllers\DashboardController;
 
 // User Register & Login
 Route::prefix('user')->group(function () {
@@ -46,4 +47,10 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
         'session'        => SessionController::class,
         'log'            => LogActivityController::class,
     ]);
+
+    // Dashboard routes
+    Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
+    
+    // Bookings additional routes
+    Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
 });
