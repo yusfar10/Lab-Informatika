@@ -156,5 +156,57 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script>
+    // Anti Back/Forward Browser untuk Dashboard
+    (function() {
+        // Tambahkan entry baru di history
+        history.pushState(null, null, location.href);
+        
+        // Flag untuk track apakah user sudah back ke login
+        let isBackToLogin = false;
+        
+        // Handle ketika user tekan back/forward button
+        window.onpopstate = function(event) {
+            // Jika user tekan back, invalidate session dan redirect ke login
+            if (!isBackToLogin) {
+                isBackToLogin = true;
+                
+                // Buat form untuk logout
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("logout") }}';
+                
+                // Tambahkan CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+                
+                // Submit form untuk logout
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                // Jika sudah back ke login, push state lagi
+                history.pushState(null, null, location.href);
+            }
+        };
+
+        // Detect forward navigation (ketika user forward dari login ke dashboard)
+        window.addEventListener('pageshow', function(event) {
+            // Jika page di-load dari cache (back/forward), force reload untuk cek auth
+            if (event.persisted) {
+                // Force reload untuk memastikan middleware auth berjalan
+                window.location.reload();
+            }
+        });
+
+        // Prevent back button dengan menambahkan state setiap kali page load
+        window.addEventListener('load', function() {
+            history.pushState(null, null, location.href);
+        });
+    })();
+  </script>
+
 </body>
 </html>

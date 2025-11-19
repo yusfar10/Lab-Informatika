@@ -87,5 +87,12 @@ class User extends Authenticatable implements JWTSubject
     public function getRememberTokenName(){
         return 'remember_token';
     }
-    
+
+    /**
+     * Get the bookings for the user.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Bookings::class, 'user_id', 'id');
+    }
 }
