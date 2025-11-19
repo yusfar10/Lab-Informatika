@@ -104,7 +104,7 @@
             <div class="pemisah-box">
               <p class="mb-1 fw-semibold">Lab Komputer 1</p>
               <p class="mb-1 small">Kapasitas : 30 Komputer<br>Khusus : Mahasiswa Prodi Informatika<br>Lokasi : Gedung Siber<br>Lantai : 7</p>
-              <button class="btn btn-primary btn-sm">View Detail</button>
+              <button class="btn btn-primary btn-sm" onclick="window.location='{{ route('mahasiswa.detail') }}'">View Detail</button>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@
             <div class="pemisah-box">
               <p class="mb-1 fw-semibold">Lab Komputer 1</p>
               <p class="mb-1 small">Kapasitas : 30 Komputer<br>Kh khusus : Mahasiswa Prodi Informatika<br>Lokasi : Gedung Siber<br>Lantai : 7</p>
-              <button class="btn btn-primary btn-sm">View Detail</button>
+              <button class="btn btn-primary btn-sm" onclick="window.location='{{ route('mahasiswa.detail') }}'">View Detail</button>
             </div>
           </div>
         </div>

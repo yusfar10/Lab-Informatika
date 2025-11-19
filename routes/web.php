@@ -27,6 +27,7 @@ Route::get('/admin/user', function () {
 //     return view('dashboard.user.user');
 // })->name('user.dashboard')->middleware('auth');
 
+// NAV
 Route::get('/mahasiswa/dashboard', function () {
     return view('dashboard.mahasiswa');
 })->name('mahasiswa.dashboard')->middleware('auth');
@@ -47,10 +48,24 @@ Route::get('/guest/dashboard', function () {
     return view('dashboard.guest.guest');
 })->name('guest.dashboard')->middleware('auth');
 
+// Detail
+Route::get('/mahasiswa/datail', function () {
+    return view('dashboard.mahasiswa.detail.detail');
+})->name('mahasiswa.detail')->middleware('auth');
+
 // PASSWORD RESET ROUTES
 Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
+
+// error Handling
+Route::get('/test500', function () {
+    abort(500); // Fatal error
+});
+
+Route::get('/test403', function () {
+    abort(403);
+});
 
