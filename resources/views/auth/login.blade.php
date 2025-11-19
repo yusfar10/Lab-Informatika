@@ -159,6 +159,27 @@
         </div>
     </div>
 
+    <script>
+        // Anti Back/Forward Browser untuk Login Page
+        (function(){
+            // Jika user sudah login, tetap di halaman login (jangan auto redirect)
+            // Ini memungkinkan user untuk login kembali jika forward dari dashboard
+            
+            // Tambahkan entry baru di history untuk prevent back button
+            history.pushState(null, null, location.href);
+
+            // Handle ketika user tekan back/forward button
+            window.onpopstate = function(event) {
+                // Push state lagi untuk prevent back
+                history.pushState(null, null, location.href);
+            };
+
+            // Prevent back button dengan menambahkan state setiap kali page load
+            window.addEventListener('load', function() {
+                history.pushState(null, null, location.href);
+            });
+        })();
+    </script>
 </body>
 
 </html>
