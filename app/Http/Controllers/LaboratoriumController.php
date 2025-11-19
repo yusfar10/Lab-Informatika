@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LaboratoriumController extends Controller
 {
@@ -12,7 +13,13 @@ class LaboratoriumController extends Controller
      */
     public function index()
     {
-        //
+        $laboratoriums = Laboratorium::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $laboratoriums,
+            'message' => 'Data laboratorium berhasil diambil'
+        ]);
     }
 
     /**
@@ -28,7 +35,28 @@ class LaboratoriumController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'room_name' => 'required|string|max:100',
+            'is_available' => 'boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $laboratorium = Laboratorium::create([
+            'room_name' => $request->room_name,
+            'is_available' => $request->is_available ?? true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $laboratorium,
+            'message' => 'Laboratorium berhasil ditambahkan'
+        ], 201);
     }
 
     /**
@@ -36,7 +64,11 @@ class LaboratoriumController extends Controller
      */
     public function show(Laboratorium $laboratorium)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'data' => $laboratorium,
+            'message' => 'Data laboratorium berhasil diambil'
+        ]);
     }
 
     /**
@@ -52,7 +84,25 @@ class LaboratoriumController extends Controller
      */
     public function update(Request $request, Laboratorium $laboratorium)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'room_name' => 'string|max:100',
+            'is_available' => 'boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $laboratorium->update($request->only(['room_name', 'is_available']));
+
+        return response()->json([
+            'success' => true,
+            'data' => $laboratorium->fresh(),
+            'message' => 'Laboratorium berhasil diperbarui'
+        ]);
     }
 
     /**
@@ -60,6 +110,11 @@ class LaboratoriumController extends Controller
      */
     public function destroy(Laboratorium $laboratorium)
     {
-        //
+        $laboratorium->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Laboratorium berhasil dihapus'
+        ]);
     }
 }

@@ -56,7 +56,7 @@
             <p>Hello,</p>
             <p>You are receiving this email because we received a password reset request for your account.</p>
             <p>Click the button below to reset your password:</p>
-            <a href="{{ url('/reset-password/' . $token . '?email=' . urlencode($email)) }}" class="button">Reset Password</a>
+            <a href="{{ $url }}" class="button">Reset Password</a>
             <p>If you did not request a password reset, no further action is required.</p>
             <p>This password reset link will expire in 60 minutes.</p>
             <p>Regards,<br>Informatics Lab Team</p>

@@ -138,17 +138,17 @@
         <p>Jangan lupa cek pengumuman untuk info terbaru ya!</p>
 
         @if ($errors->any())
-            <div class="error">{{ $errors->first('username') }}</div>
+            <div class="error">{{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('login.post') }}">
             @csrf
-            <input type="text" name="username" placeholder="Username" value="{{ old('username') }}" required>
+            <input type="text" name="login" placeholder="Email atau Username" value="{{ old('login') }}" required>
             <input type="password" name="password" placeholder="Password" required>
 
             <div class="links">
                 <a href="{{ route('guest.dashboard') }}">Login as Guest</a>
-                <a href="#">Lupa Password?</a>
+                <a href="{{ route('password.request') }}">Lupa Password?</a>
             </div>
 
             <button type="submit">Login</button>

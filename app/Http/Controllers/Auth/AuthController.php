@@ -17,6 +17,9 @@ class AuthController extends Controller
         $this->refreshTokenService = $refreshTokenService;
     }
 
+    /**
+     * Login user and return JWT token
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -39,6 +42,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Guest login for authenticated users
+     */
     public function guestLogin(Request $request)
     {
         $user = Auth::user(); // Assuming guest user is already authenticated or create one
@@ -53,6 +59,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refresh access token using refresh token
+     */
     public function refreshToken(Request $request)
     {
         $refreshToken = $request->input('refresh_token');
@@ -69,6 +78,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Logout user and invalidate tokens
+     */
     public function logout(Request $request)
     {
         $refreshToken = $request->input('refresh_token');

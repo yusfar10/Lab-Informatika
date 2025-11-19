@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -19,33 +20,32 @@ class RegisterController extends Controller
             'role' => 'required'
         ]);
 
-        //berikan kondisi
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        //buat user, proses inpu /PUT
         $User = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role' => $request->role,
+            'role'  => $request->role,
         ]);
 
-        //response dalam format json jika user berhasil dibuat
-        if ($User) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Pendaftaran user berhasil',
-                'data' => $User,
-            ], 201);
-        }
+        // BUAT TOKEN DENGAN JWT
+        $token = JWTAuth::fromUser($User);
 
-        // jika gagal pendaftaran responnya
+        // Generate refresh token
+        $refreshTokenService = app(\App\Services\RefreshTokenService::class);
+        $refreshToken = $refreshTokenService->generateRefreshToken($User);
+
         return response()->json([
-            'success' => false,
-            'message' => 'Pendaftaran gagal dilakukan',
-        ], 409);
+        'success' => true,
+        'message' => 'Pendaftaran user berhasil',
+        'data' => $User,
+        'token' => $token,
+        'token_type' => 'bearer',
+        'refresh_token' => $refreshToken,
+    ], 201);
     }
 }
