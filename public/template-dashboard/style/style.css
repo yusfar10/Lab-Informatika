@@ -86,6 +86,22 @@
 
     .highlight {
       color: #0069d9;
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* keterangan-text */
+    .keterangan-text{
+      display: flex;
+      margin-bottom: -10px;
+      margin-left: 90px;
+      /* gap: 160px; */
+    }
+    .gap-keterangan{
+      display: grid;
+      grid-template-columns: 200px 74px auto;
     }
 
     /* Filter */
@@ -100,10 +116,15 @@
     .location {
       background-color: #e7f1ff;
       padding: 12px;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 14px;
+      border-radius: 9px;
+      justify-items: center;
+      margin-bottom: -18px;
+      font-size: 20px;
       color: #333;
+    }
+    .text-location{
+      width: 1000px;
+      text-align: left;
     }
 
     /* Lab Cards */
@@ -194,6 +215,11 @@
       left: 0;
       width: 100%;
       z-index: 9999;
+    }
+    .check-btn{
+      border-radius: 20px;
+      background-color: #0A66C2;
+      color: #fff;
     }
 
     footer {

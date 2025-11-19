@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Informacis Lab</title>
+  <title>Informatics Lab</title>
 
   <link rel="icon" type="image" href="{{ asset('images/LogoInformatics.png') }}">
 
@@ -42,21 +42,21 @@
     <!-- Statistic Cards -->
     <div class="row stats text-center mt-4 g-3">
       <div class="col-md-4">
-        <div class="card p-3">
-          <p>Total Peminjaman</p>
-          <h2>127</h2>
+        <div class="card p-3 root-banner">
+          <p class="text-banner">Total Peminjaman</p>
+          <h2 class="highlight">127</h2>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card p-3">
-          <p>Kelas Paling Banyak Booking</p>
+          <p class="text-banner">Kelas Paling Banyak Booking</p>
           <h2 class="highlight">Lab Informatika 2</h2>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card p-3">
-          <p>Jumlah Peminjaman Bulan Ini</p>
-          <h2>18</h2>
+          <p class="text-banner">Jumlah Peminjaman Bulan Ini</p>
+          <h2 class="highlight">18</h2>
         </div>
       </div>
     </div>
@@ -64,6 +64,11 @@
     <!-- Filter -->
     <div class="filter mt-4">
       <form class="row g-2 justify-content-center align-items-center">
+        <div class="keterangan-text">
+          <p class="gap-keterangan">Dari Tanggal : </p>
+          <p class="gap-keterangan">Sampai Tanggal : </p>
+          <p class="gap-keterangan">Ruang Lab : </p>
+        </div>
         <div class="col-md-3">
           <input type="date" class="form-control">
         </div>
@@ -78,13 +83,15 @@
           </select>
         </div>
         <div class="col-md-2">
-          <button type="button" class="btn btn-primary w-100">Check</button>
+          <button type="button" class="btn check-btn w-100">Check</button>
         </div>
       </form>
     </div>
 
     <div class="location mt-3">
-      Gedung Cyber UIN SSC Lt 7, Jl. Perjuangan No.1, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45135
+      <p class="text-location">
+        Gedung Cyber UIN SSC Lt 7, Jl. Perjuangan No.1, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45135
+      </p>
     </div>
 
     <!-- Content Grid -->
