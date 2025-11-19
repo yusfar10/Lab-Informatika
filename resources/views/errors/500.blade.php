@@ -16,7 +16,7 @@
 <body>
     <div class="box-error">
         <div class="code">Waduh, servernya lagi ngamuk!</div>
-        <p class="desc">Tenang… kita lagi nenangin dia dulu. Coba balik lagi nanti ya.</p>
+        <p class="desc">Tenang… kita lagi nenangin dia dulu. Coba balik lagi nanti ya. </p>
         <a href="{{ url('/') }}">Kembali ke Beranda</a>
     </div>
 </body>
