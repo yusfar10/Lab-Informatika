@@ -11,10 +11,11 @@
     </style>
 </head>
 <body>
-    <div class="box-error">
-        <div class="code">Eits, jangan nakal!</div>
-        <p class="desc">Kamu tidak punya kartu akses ke ruangan ini 😜</p>
-        <a href="{{ url('/') }}">Kembali</a>
-    </div>
+@include('errors.layout', [
+    'title' => '403',
+    'message' => 'Akses ditolak! Kamu belum punya izin ke ruangan ini 😅',
+    'video' => 'errors/403.mp4'
+])
+
 </body>
 </html>

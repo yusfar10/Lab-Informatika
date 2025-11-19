@@ -281,7 +281,7 @@
                     <div class="pemisah-box">
                         <p class="mb-1 fw-semibold">${labName}</p>
                         <p class="mb-1 small">Status : ${lab.is_available ? 'Tersedia' : 'Tidak Tersedia'}<br>Lokasi : Gedung Siber<br>Lantai : 7</p>
-                        <button class="btn btn-primary btn-sm" onclick="window.location='{{ route('mahasiswa.detail') }}'">View Detail</button>
+                        <button class="btn btn-primary btn-sm" onclick="window.location='{{ route('mahasiswa.detail2') }}'">View Detail</button>
                     </div>
                 </div>
             `;

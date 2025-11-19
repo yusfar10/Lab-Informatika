@@ -14,10 +14,10 @@
     </style>
 </head>
 <body>
-    <div class="box-error">
-        <div class="code">Waduh, servernya lagi ngamuk!</div>
-        <p class="desc">Tenang… kita lagi nenangin dia dulu. Coba balik lagi nanti ya. </p>
-        <a href="{{ url('/') }}">Kembali ke Beranda</a>
-    </div>
+@include('errors.layout', [
+    'title' => '500',
+    'message' => 'Server lagi ngambek 😭\nTolong coba lagi nanti.',
+    'video' => 'errors/500.mp4'
+])
 </body>
 </html>

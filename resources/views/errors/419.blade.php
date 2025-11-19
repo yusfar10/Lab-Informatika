@@ -40,19 +40,11 @@
 </head>
 <body>
 
-    <div class="error-card">
-        <div class="error-code">Aduh, sesi kamu kedaluwarsa!</div>
-        <h4>Page Expired</h4>
-        <p class="text-muted">Sepertinya kamu terlalu lama mikir… atau mungkin lagi ngopi ☕
-Yuk refresh dulu biar semangat lagi!</p>
-
-        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-refresh">
-            Kembali
-        </a>
-        <a href="/" class="btn btn-primary btn-refresh">
-            Kembali ke Beranda
-        </a>
-    </div>
+@include('errors.layout', [
+    'title' => '419',
+    'message' => 'Session kedaluwarsa! Yuk refresh energi dulu 🔄',
+    'video' => 'errors/419.mp4'
+])
 
 </body>
 </html>

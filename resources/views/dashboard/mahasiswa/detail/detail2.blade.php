@@ -43,9 +43,10 @@
             right: 30px;
             top: 380px;
         }
-        .lab1{
+        .lab2{
           position: absolute;
           right: 950px;
+          color: #ffffff;
           top: 480px;
         }
         .fasilitas-box{
@@ -83,13 +84,13 @@
 
     <!-- HEADER IMAGE -->
     <div class="container mt-4 position-relative">
-        <img src="{{ asset('template-dashboard/img/lab1.jpg') }}" class="hero-img" alt="Lab">
+        <img src="{{ asset('template-dashboard/img/lab2.jpg') }}" class="hero-img" alt="Lab">
         <span class="badge-booking">Booking</span>
     </div>
 
     <!-- TITLE -->
     <div class="container mt-3">
-        <h3 class="fw-bold lab1">Lab Komputer 1</h3>
+        <h3 class="fw-bold lab2">Lab Komputer 2</h3>
     </div>
 
     <!-- INFO BOX -->
@@ -98,7 +99,7 @@
 
             <div class="col-3">
                 <p class="fw-semibold mb-1">Kategori :</p>
-                <span>Lab 1</span>
+                <span>Lab 2</span>
             </div>
 
             <div class="col-3">

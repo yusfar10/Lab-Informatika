@@ -51,12 +51,11 @@
 </head>
 
 <body>
-    <div class="box-error">
-        <div class="code">Oops! Kamu nyari apa?</div>
-        <h2 class="title">Halaman Tidak Ditemukan</h2>
-        <p class="desc">Halamannya kabur duluan sebelum kamu sampai ke sini.</p>
+@include('errors.layout', [
+    'title' => '404',
+    'message' => 'Ups! Halaman yang kamu cari hilang ke dunia lain 🤯',
+    'video' => 'errors/404.mp4'
+])
 
-        <a href="{{ url('/') }}" class="btn-home">Kembali ke Beranda</a>
-    </div>
 </body>
 </html>
