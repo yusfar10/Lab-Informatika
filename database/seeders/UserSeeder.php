@@ -30,7 +30,10 @@ class UserSeeder extends Seeder
                 'username' => 'mahasiswa',
                 'email' => 'mahasiswa@gmail.com',
                 'password' => Hash::make('mahasiswa'),
-                'role' => 'mahasiswa'
+                'role' => 'mahasiswa',
+                'semester' => 5,
+                'kelas' => 'Kelas Informatika 5 A',
+                'no_hp' => '81234567000',
             ],
             [
                 'email' => 'Kosma_it1A@gmail.com',
@@ -142,6 +145,8 @@ class UserSeeder extends Seeder
                 'email' => 'muhammadarf5555@gmail.com',
                 'password' => Hash::make('Arifrizky123456'),
                 'role' => 'mahasiswa',
+                'semester' => 5,
+                'kelas' => 'Kelas Informatika 5 A',
                 'no_hp' => '085172033209',
             ],
         ];

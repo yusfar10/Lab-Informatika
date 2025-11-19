@@ -76,32 +76,51 @@ class BookingsController extends Controller
                 'jadwalKelas:class_id,class_name,room_id,start_time,end_time,penanggung_jawab',
                 'jadwalKelas.laboratorium:room_id,room_name'
             ])
+            ->whereHas('user', function ($query) {
+                $query->whereNotNull('kelas')
+                      ->where('kelas', '!=', '');
+            })
+            ->whereHas('jadwalKelas', function ($query) {
+                $query->whereNotNull('class_name')
+                      ->whereNotNull('room_id');
+            })
+            ->whereHas('jadwalKelas.laboratorium')
             ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get()
             ->map(function ($booking) {
+                // User sudah pasti ada dan memiliki kelas (karena whereHas filter)
+                $user = $booking->user;
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'username' => $user->username,
+                    'kelas' => $user->kelas,
+                ];
+                
+                // Jadwal kelas sudah pasti ada dan memiliki laboratorium (karena whereHas filter)
+                $jadwalKelas = $booking->jadwalKelas;
+                $laboratorium = $jadwalKelas->laboratorium;
+                
+                $jadwalData = [
+                    'class_id' => $jadwalKelas->class_id,
+                    'class_name' => $jadwalKelas->class_name,
+                    'penanggung_jawab' => $jadwalKelas->penanggung_jawab,
+                    'start_time' => $jadwalKelas->start_time,
+                    'end_time' => $jadwalKelas->end_time,
+                    'laboratorium' => [
+                        'room_id' => $laboratorium->room_id,
+                        'room_name' => $laboratorium->room_name,
+                    ],
+                ];
+                
                 return [
                     'booking_id' => $booking->booking_id,
                     'booking_time' => $booking->booking_time,
                     'booking_time_human' => $booking->created_at_human,
                     'created_at' => $booking->created_at,
-                    'user' => [
-                        'id' => $booking->user->id ?? null,
-                        'name' => $booking->user->name ?? 'Unknown',
-                        'username' => $booking->user->username ?? 'Unknown',
-                        'kelas' => $booking->user->kelas ?? 'Unknown',
-                    ],
-                    'jadwal_kelas' => [
-                        'class_id' => $booking->jadwalKelas->class_id ?? null,
-                        'class_name' => $booking->jadwalKelas->class_name ?? 'Unknown',
-                        'penanggung_jawab' => $booking->jadwalKelas->penanggung_jawab ?? 'Unknown',
-                        'start_time' => $booking->jadwalKelas->start_time ?? null,
-                        'end_time' => $booking->jadwalKelas->end_time ?? null,
-                        'laboratorium' => [
-                            'room_id' => $booking->jadwalKelas->laboratorium->room_id ?? null,
-                            'room_name' => $booking->jadwalKelas->laboratorium->room_name ?? 'Unknown',
-                        ],
-                    ],
+                    'user' => $userData,
+                    'jadwal_kelas' => $jadwalData,
                 ];
             });
 

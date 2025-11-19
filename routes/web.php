@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\DashboardController;
 
 // LOGIN
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -31,6 +32,13 @@ Route::get('/admin/user', function () {
 Route::get('/mahasiswa/dashboard', function () {
     return view('dashboard.mahasiswa');
 })->name('mahasiswa.dashboard')->middleware('auth');
+
+// Dashboard API Routes (Web - menggunakan session auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/api/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats.web');
+    Route::get('/api/bookings/latest', [App\Http\Controllers\BookingsController::class, 'latest'])->name('bookings.latest.web');
+    Route::get('/api/lab', [App\Http\Controllers\LaboratoriumController::class, 'index'])->name('lab.index.web');
+});
 
 Route::get('/mahasiswa/riwayat', function () {
     return view('dashboard.mahasiswa.riwayat booking.riwayat');

@@ -12,21 +12,11 @@ class LaboratoriumSeeder extends Seeder
         $labs = [
             [
                 'room_name' => 'Lab Komputer 1',
-                'description' => 'Laboratorium Komputer untuk mahasiswa Informatika',
-                'capacity' => 30,
-                'status' => 'available',
+                'is_available' => true,
             ],
             [
                 'room_name' => 'Lab Komputer 2',
-                'description' => 'Laboratorium Komputer untuk mahasiswa Informatika',
-                'capacity' => 30,
-                'status' => 'available',
-            ],
-            [
-                'room_name' => 'Lab Komputer 3',
-                'description' => 'Laboratorium Komputer untuk mahasiswa Informatika',
-                'capacity' => 30,
-                'status' => 'available',
+                'is_available' => true,
             ],
         ];
 
@@ -36,5 +26,7 @@ class LaboratoriumSeeder extends Seeder
                 $lab
             );
         }
+
+        $this->command->info('✅ LaboratoriumSeeder: ' . count($labs) . ' laboratorium berhasil dibuat!');
     }
 }

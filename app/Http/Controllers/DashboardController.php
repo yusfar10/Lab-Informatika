@@ -36,16 +36,13 @@ class DashboardController extends Controller
                 ->orderByDesc('booking_count')
                 ->first();
 
+            // Format response sesuai dengan yang diharapkan FE
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'total_bookings' => $totalBookings,
-                    'bookings_this_month' => $bookingsThisMonth,
-                    'top_lab' => [
-                        'room_id' => $topLab->room_id ?? null,
-                        'room_name' => $topLab->room_name ?? 'Belum ada data',
-                        'booking_count' => $topLab->booking_count ?? 0,
-                    ],
+                    'total_peminjaman' => $totalBookings,
+                    'kelas_terbanyak' => $topLab->room_name ?? 'Belum ada data',
+                    'peminjaman_bulan_ini' => $bookingsThisMonth,
                 ],
                 'message' => 'Dashboard statistics retrieved successfully'
             ], 200);
