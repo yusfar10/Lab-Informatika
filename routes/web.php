@@ -37,7 +37,11 @@ Route::get('/mahasiswa/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/api/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats.web');
     Route::get('/api/bookings/latest', [App\Http\Controllers\BookingsController::class, 'latest'])->name('bookings.latest.web');
+    Route::get('/api/booking/info', [App\Http\Controllers\BookingsController::class, 'info'])->name('booking.info.web');
+    Route::post('/api/booking', [App\Http\Controllers\BookingsController::class, 'store'])->name('booking.store.web');
     Route::get('/api/lab', [App\Http\Controllers\LaboratoriumController::class, 'index'])->name('lab.index.web');
+    Route::get('/api/lab/available', [App\Http\Controllers\LaboratoriumController::class, 'available'])->name('lab.available.web');
+    Route::get('/api/jadwal', [App\Http\Controllers\JadwalKelasController::class, 'index'])->name('jadwal.index.web');
 });
 
 Route::get('/mahasiswa/riwayat', function () {

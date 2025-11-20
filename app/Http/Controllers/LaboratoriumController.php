@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
+use App\Models\JadwalKelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class LaboratoriumController extends Controller
 {
@@ -115,6 +117,80 @@ class LaboratoriumController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Laboratorium berhasil dihapus'
+        ]);
+    }
+
+    /**
+     * Get available laboratories based on date and time
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function available(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'tanggal' => 'required|date|after_or_equal:today',
+            'jam_mulai' => 'required|date_format:H:i',
+            'sks' => 'required|integer|min:1|max:4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $tanggal = $request->input('tanggal');
+        $jamMulai = $request->input('jam_mulai');
+        $sks = $request->input('sks', 1);
+
+        // Calculate end time (1 SKS = 50 menit)
+        $durasiMenit = $sks * 50;
+        $startDateTime = Carbon::parse("{$tanggal} {$jamMulai}");
+        $endDateTime = $startDateTime->copy()->addMinutes($durasiMenit);
+
+        // Get all laboratories that are available
+        $allLabs = Laboratorium::where('is_available', true)->get();
+
+        // Filter labs that don't have conflicting schedules
+        $availableLabs = $allLabs->filter(function ($lab) use ($startDateTime, $endDateTime) {
+            // Check if there's any conflicting schedule
+            // Conflict occurs when:
+            // - Existing schedule overlaps with our requested time
+            // - Only check schedules with status 'schedule' (active)
+            $hasConflict = JadwalKelas::where('room_id', $lab->room_id)
+                ->where('status', 'schedule') // Only check active schedules
+                ->where(function ($query) use ($startDateTime, $endDateTime) {
+                    // Time overlap check:
+                    // Existing schedule overlaps if:
+                    // - Existing start_time < our end_time AND
+                    // - Existing end_time > our start_time
+                    $query->where('start_time', '<', $endDateTime)
+                          ->where('end_time', '>', $startDateTime);
+                })
+                ->exists();
+
+            return !$hasConflict;
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $availableLabs->values()->map(function ($lab) {
+                return [
+                    'room_id' => $lab->room_id,
+                    'room_name' => $lab->room_name,
+                    'is_available' => $lab->is_available,
+                ];
+            }),
+            'message' => 'Data laboratorium tersedia berhasil diambil',
+            'meta' => [
+                'tanggal' => $tanggal,
+                'jam_mulai' => $jamMulai,
+                'jam_selesai' => $endDateTime->format('H:i'),
+                'sks' => $sks,
+                'durasi_menit' => $durasiMenit,
+            ]
         ]);
     }
 }

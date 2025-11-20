@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookings;
+use App\Models\JadwalKelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class BookingsController extends Controller
 {
@@ -28,7 +32,99 @@ class BookingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'penggunaan_kelas' => 'required|string|max:100',
+                'room_id' => 'required|exists:laboratorium,room_id',
+                'tanggal' => 'required|date|after_or_equal:today',
+                'jam_mulai' => 'required|date_format:H:i',
+                'sks' => 'required|integer|min:1|max:4',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak terautentikasi'
+                ], 401);
+            }
+
+            $tanggal = $request->input('tanggal');
+            $jamMulai = $request->input('jam_mulai');
+            $sks = $request->input('sks');
+            $roomId = $request->input('room_id');
+            $penggunaanKelas = $request->input('penggunaan_kelas');
+
+            // Calculate end time (1 SKS = 50 menit)
+            $durasiMenit = $sks * 50;
+            $startDateTime = Carbon::parse("{$tanggal} {$jamMulai}");
+            $endDateTime = $startDateTime->copy()->addMinutes($durasiMenit);
+
+            // Check for conflicts
+            $hasConflict = JadwalKelas::where('room_id', $roomId)
+                ->where('status', 'schedule')
+                ->where(function ($query) use ($startDateTime, $endDateTime) {
+                    $query->where('start_time', '<', $endDateTime)
+                          ->where('end_time', '>', $startDateTime);
+                })
+                ->exists();
+
+            if ($hasConflict) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jadwal bertabrakan dengan jadwal yang sudah ada'
+                ], 409);
+            }
+
+            // Get user's kelas for penanggung_jawab
+            $penanggungJawab = $user->name . ($user->kelas ? ' - ' . $user->kelas : '');
+
+            // Create JadwalKelas
+            $jadwalKelas = JadwalKelas::create([
+                'class_name' => $penggunaanKelas,
+                'room_id' => $roomId,
+                'penanggung_jawab' => $penanggungJawab,
+                'start_time' => $startDateTime,
+                'end_time' => $endDateTime,
+                'status' => 'schedule',
+                'update_by' => $user->id,
+            ]);
+
+            // Create Booking
+            $booking = Bookings::create([
+                'user_id' => $user->id,
+                'class_id' => $jadwalKelas->class_id,
+                'booking_time' => $startDateTime,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking berhasil dibuat',
+                'data' => [
+                    'booking_id' => $booking->booking_id,
+                    'jadwal_kelas' => [
+                        'class_id' => $jadwalKelas->class_id,
+                        'class_name' => $jadwalKelas->class_name,
+                        'start_time' => $jadwalKelas->start_time,
+                        'end_time' => $jadwalKelas->end_time,
+                    ]
+                ]
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat booking',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -68,10 +164,15 @@ class BookingsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function latest()
+    public function latest(Request $request)
     {
         try {
-            $latestBookings = Bookings::with([
+            // Get filter parameters
+            $tanggal = $request->input('tanggal');
+            $jam = $request->input('jam');
+            $roomId = $request->input('room_id');
+            
+            $query = Bookings::with([
                 'user:id,name,username,kelas',
                 'jadwalKelas:class_id,class_name,room_id,start_time,end_time,penanggung_jawab',
                 'jadwalKelas.laboratorium:room_id,room_name'
@@ -84,8 +185,24 @@ class BookingsController extends Controller
                 $query->whereNotNull('class_name')
                       ->whereNotNull('room_id');
             })
-            ->whereHas('jadwalKelas.laboratorium')
-            ->orderBy('created_at', 'desc')
+            ->whereHas('jadwalKelas.laboratorium');
+            
+            // Apply filters
+            if ($tanggal) {
+                $query->whereHas('jadwalKelas', function ($q) use ($tanggal) {
+                    $q->whereDate('start_time', $tanggal);
+                });
+            }
+            
+            // Filter jam dihapus sesuai permintaan user
+            
+            if ($roomId) {
+                $query->whereHas('jadwalKelas', function ($q) use ($roomId) {
+                    $q->where('room_id', $roomId);
+                });
+            }
+            
+            $latestBookings = $query->orderBy('created_at', 'desc')
             ->limit(3)
             ->get()
             ->map(function ($booking) {
@@ -124,6 +241,18 @@ class BookingsController extends Controller
                 ];
             });
 
+            // Debug: Log jika tidak ada data
+            if ($latestBookings->isEmpty()) {
+                \Log::info('Latest bookings empty', [
+                    'filters' => [
+                        'tanggal' => $tanggal,
+                        'jam' => $jam,
+                        'room_id' => $roomId
+                    ],
+                    'total_bookings' => Bookings::count()
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'data' => $latestBookings,
@@ -134,6 +263,83 @@ class BookingsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve latest bookings',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get booking information by class_id
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function info(Request $request)
+    {
+        try {
+            $classId = $request->input('class_id');
+            
+            if (!$classId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'class_id is required'
+                ], 400);
+            }
+            
+            // Get booking for this class
+            $booking = Bookings::with([
+                'user:id,name,username,kelas',
+                'jadwalKelas:class_id,class_name,room_id,start_time,end_time,penanggung_jawab',
+                'jadwalKelas.laboratorium:room_id,room_name'
+            ])
+            ->where('class_id', $classId)
+            ->first();
+            
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Booking not found'
+                ], 404);
+            }
+            
+            $user = $booking->user;
+            $jadwalKelas = $booking->jadwalKelas;
+            $laboratorium = $jadwalKelas->laboratorium;
+            
+            // Format time
+            $startTime = \Carbon\Carbon::parse($jadwalKelas->start_time);
+            $endTime = \Carbon\Carbon::parse($jadwalKelas->end_time);
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'booking_id' => $booking->booking_id,
+                    'booking_time' => $booking->booking_time,
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'username' => $user->username,
+                        'kelas' => $user->kelas,
+                    ],
+                    'jadwal_kelas' => [
+                        'class_id' => $jadwalKelas->class_id,
+                        'class_name' => $jadwalKelas->class_name,
+                        'penanggung_jawab' => $jadwalKelas->penanggung_jawab,
+                        'time_start' => $startTime->format('H:i'),
+                        'time_end' => $endTime->format('H:i'),
+                        'laboratorium' => [
+                            'room_id' => $laboratorium->room_id,
+                            'room_name' => $laboratorium->room_name,
+                        ],
+                    ],
+                ],
+                'message' => 'Booking information retrieved successfully'
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve booking information',
                 'error' => $e->getMessage()
             ], 500);
         }

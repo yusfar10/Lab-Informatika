@@ -42,95 +42,90 @@
             <p>Please Booking yang tertib ya!</p>
         </div>
 
-        <!-- Statistic Cards -->
-        <div class="row stats text-center mt-4 g-3">
-            <div class="col-md-4">
-                <div class="card p-3 root-banner">
-                    <p class="text-banner">Total Peminjaman</p>
-                    <h2 class="highlight" id="totalPeminjaman">-</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3">
-                    <p class="text-banner">Kelas Paling Banyak Booking</p>
-                    <h2 class="highlight" id="kelasTerbanyak">-</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3">
-                    <p class="text-banner">Jumlah Peminjaman Bulan Ini</p>
-                    <h2 class="highlight" id="peminjamanBulanIni">-</h2>
-                </div>
-            </div>
+    <!-- Statistic Cards -->
+    <div class="row stats text-center mt-4 g-3">
+      <div class="col-md-4">
+        <div class="card p-3 root-banner">
+          <p class="text-banner">Total Peminjaman</p>
+          <h2 class="highlight" id="totalPeminjaman">-</h2>
         </div>
-
-        <!-- Filter -->
-        <div class="filter mt-4">
-            <form class="row g-2 justify-content-center align-items-center">
-                <div class="keterangan-text">
-                    <p class="gap-keterangan">Dari Tanggal : </p>
-                    <p class="gap-keterangan">Sampai Tanggal : </p>
-                    <p class="gap-keterangan">Ruang Lab : </p>
-                </div>
-                <div class="col-md-3">
-                    <input type="date" class="form-control">
-                </div>
-                <div class="col-md-3">
-                    <input type="date" class="form-control">
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select" id="labFilterSelect">
-                        <option selected value="">-- Pilih Lab --</option>
-                        <option value="1">Lab Komputer 1</option>
-                        <option value="2">Lab Komputer 2</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn check-btn w-100">Check</button>
-                </div>
-            </form>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <p class="text-banner">Kelas Paling Banyak Booking</p>
+          <h2 class="highlight" id="kelasTerbanyak">-</h2>
         </div>
-
-        <div class="location mt-3">
-            <p class="text-location">
-                Gedung Cyber UIN SSC Lt 7, Jl. Perjuangan No.1, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45135
-            </p>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <p class="text-banner">Jumlah Peminjaman Bulan Ini</p>
+          <h2 class="highlight" id="peminjamanBulanIni">-</h2>
         </div>
-
-        <!-- Content Grid -->
-        <div class="row mt-4 g-3">
-            <!-- Left: Lab List -->
-            <div class="col-lg-8" id="labListContainer">
-                <!-- Lab list akan di-render dari API -->
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2 text-muted">Memuat daftar laboratorium...</p>
-                </div>
-            </div>
-
-            <!-- Right: Latest Booking -->
-            <div class="col-lg-4">
-                <div class="card-custom p-3">
-                    <h6 class="card-header-custom mb-3">LATEST BOOKING ROOM!</h6>
-                    <div id="latestBookingContainer">
-                        <!-- Latest booking akan di-render dari API -->
-                        <div class="text-center py-3">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2 small text-muted">Memuat booking terbaru...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <footer class="mt-5">
-        <p>Copyright by Kelompok 1 - Manajemen Proyek</p>
-    </footer>
+    <!-- Filter -->
+    <div class="filter mt-4">
+      <form class="row g-3 align-items-end" id="filterForm">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold mb-2">Tanggal</label>
+          <input type="date" class="form-control" id="filterTanggal" min="{{ date('Y-m-d') }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold mb-2">Ruang Lab</label>
+          <select class="form-select" id="labFilterSelect">
+            <option selected value="">-- Pilih Lab --</option>
+            <!-- Akan di-populate dari API -->
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn check-btn w-100" id="btnFilter">Booking Sekarang</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="location mt-3">
+      <p class="text-location">
+        Gedung Cyber UIN SSC Lt 7, Jl. Perjuangan No.1, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45135
+      </p>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="row mt-4 g-3">
+      <!-- Left: Lab List -->
+      <div class="col-lg-8" id="labListContainer">
+        <!-- Lab list akan di-render dari API -->
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Memuat daftar laboratorium...</p>
+        </div>
+      </div>
+
+      <!-- Right: Latest Booking -->
+      <div class="col-lg-4">
+        <div class="card-custom p-3">
+          <h6 class="card-header-custom mb-3">LATEST BOOKING ROOM!</h6>
+          <div id="latestBookingContainer">
+            <!-- Latest booking akan di-render dari API -->
+            <div class="text-center py-3">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2 small text-muted">Memuat booking terbaru...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div> <!-- End container -->
+
+  <footer class="mt-5">
+    <div class="container">
+      <p class="mb-0">Copyright by Kelompok 1 - Manajemen Proyek</p>
+    </div>
+  </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -338,6 +333,7 @@
                     <p class="small text-muted">Belum ada booking</p>
                 </div>
             `;
+<<<<<<< HEAD
                 return;
             }
 
@@ -378,16 +374,36 @@
                 latestBookingContainer.appendChild(bookingItem);
             });
         }
-
-        // ============================================
-        // HANDLE FILTER
-        // ============================================
-        function handleFilter() {
-            const form = document.querySelector('.filter form');
-            const dariTanggal = document.querySelector('.filter input[type="date"]:nth-of-type(1)');
-            const sampaiTanggal = document.querySelector('.filter input[type="date"]:nth-of-type(2)');
-            const labSelect = document.getElementById('labFilterSelect');
-            const checkButton = document.querySelector('.filter button');
+    
+    // ============================================
+    // HANDLE FILTER
+    // ============================================
+    function handleFilter() {
+        const filterTanggal = document.getElementById('filterTanggal');
+        const labSelect = document.getElementById('labFilterSelect');
+        const btnFilter = document.getElementById('btnFilter');
+        
+        if (btnFilter) {
+            btnFilter.addEventListener('click', function() {
+                const tanggal = filterTanggal?.value || null;
+                const labId = labSelect?.value || null;
+                
+                // Validasi: minimal tanggal harus diisi
+                if (!tanggal) {
+                    alert('Mohon pilih tanggal terlebih dahulu');
+                    filterTanggal?.focus();
+                    return;
+                }
+                
+                // Build URL untuk redirect ke halaman booking
+                const bookingUrl = new URL('{{ route("mahasiswa.booking-kelas") }}', window.location.origin);
+                if (tanggal) bookingUrl.searchParams.append('tanggal', tanggal);
+                if (labId) bookingUrl.searchParams.append('lab', labId);
+                
+                // Redirect ke halaman booking dengan parameter
+                window.location.href = bookingUrl.toString();
+            });
+        }
 
             if (checkButton) {
                 checkButton.addEventListener('click', async function() {
