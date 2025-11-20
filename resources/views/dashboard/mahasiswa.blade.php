@@ -333,44 +333,55 @@
                     <p class="small text-muted">Belum ada booking</p>
                 </div>
             `;
-<<<<<<< HEAD
                 return;
             }
 
             // Render latest booking dari API data
             bookings.forEach(booking => {
-                // Format waktu dari start_time dan end_time
                 const startTime = booking.jadwal_kelas?.start_time ?
-                    new Date(booking.jadwal_kelas.start_time).toLocaleTimeString('id-ID', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }) : '';
+                    new Date(booking.jadwal_kelas.start_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
                 const endTime = booking.jadwal_kelas?.end_time ?
-                    new Date(booking.jadwal_kelas.end_time).toLocaleTimeString('id-ID', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }) : '';
+                    new Date(booking.jadwal_kelas.end_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
                 const waktu = startTime && endTime ? `${startTime} - ${endTime}` : 'N/A';
 
-                // Format waktu relatif (created_at_human atau booking_time_human)
-                const waktuRelatif = booking.booking_time_human || booking.created_at_human || 'Baru saja';
-                const waktuRelatifText = waktuRelatif.includes('ago') ?
-                    `Dipesan ${waktuRelatif.replace(' ago', ' yang lalu')}` :
-                    `Dipesan ${waktuRelatif}`;
+                let waktuRelatifText = 'Baru saja';
+                if (booking.created_at) {
+                    const createdDate = new Date(booking.created_at);
+                    const now = new Date();
+                    const diffMs = now - createdDate;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHours = Math.floor(diffMs / 3600000);
+                    const diffDays = Math.floor(diffMs / 86400000);
+
+                    if (diffMins < 1) {
+                        waktuRelatifText = 'Baru saja';
+                    } else if (diffMins < 60) {
+                        waktuRelatifText = `${diffMins} menit yang lalu`;
+                    } else if (diffHours < 24) {
+                        waktuRelatifText = `${diffHours} jam yang lalu`;
+                    } else {
+                        waktuRelatifText = `${diffDays} hari yang lalu`;
+                    }
+                }
 
                 const labName = booking.jadwal_kelas?.laboratorium?.room_name || 'N/A';
                 const className = booking.jadwal_kelas?.class_name || 'N/A';
-                const penanggungJawab = booking.jadwal_kelas?.penanggung_jawab || 'N/A';
+                const userName = booking.user?.name || 'N/A';
                 const userKelas = booking.user?.kelas || 'N/A';
 
                 const bookingItem = document.createElement('div');
-                bookingItem.className = 'latest-box';
+                bookingItem.className = 'latest-box mb-3';
                 bookingItem.innerHTML = `
-                <p class="fw-semibold mb-0">${labName}</p>
-                <p class="latest-time">${waktu}</p>
-                <p class="mb-0 small">${className}<br>oleh: ${userKelas}</p>
-                <span class="badge badge-time mt-1">${waktuRelatifText}</span>
-            `;
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <p class="fw-semibold mb-1">${labName}</p>
+                            <p class="latest-time mb-1">${waktu}</p>
+                        </div>
+                        <span class="badge badge-time">${waktuRelatifText}</span>
+                    </div>
+                    <p class="mb-1 small"><strong>${className}</strong></p>
+                    <p class="mb-0 small text-muted">oleh: ${userName} (${userKelas})</p>
+                `;
                 latestBookingContainer.appendChild(bookingItem);
             });
         }
@@ -404,30 +415,7 @@
                 window.location.href = bookingUrl.toString();
             });
         }
-
-            if (checkButton) {
-                checkButton.addEventListener('click', async function() {
-                    const filterData = {
-                        dari_tanggal: dariTanggal?.value || null,
-                        sampai_tanggal: sampaiTanggal?.value || null,
-                        lab_id: labSelect?.value || null
-                    };
-
-                    try {
-                        // TODO: Integrate dengan API endpoint: POST /api/v1/dashboard/filter
-                        // const response = await fetchAPI('/dashboard/filter', {
-                        //     method: 'POST',
-                        //     body: JSON.stringify(filterData)
-                        // });
-
-                        // TODO: Update UI dengan filtered data
-                        console.log('Filter data:', filterData);
-                    } catch (error) {
-                        console.error('Error filtering data:', error);
-                    }
-                });
-            }
-        }
+    }
 
         // ============================================
         // POPULATE LAB DROPDOWN
@@ -481,6 +469,11 @@
         // Run initialization saat DOM ready
         document.addEventListener('DOMContentLoaded', function() {
             initDashboard();
+            
+            // Auto-refresh latest booking setiap 30 detik
+            setInterval(function() {
+                fetchLatestBooking();
+            }, 30000); // 30 detik
         });
 
         // ============================================
