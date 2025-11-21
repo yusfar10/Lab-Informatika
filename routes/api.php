@@ -36,7 +36,7 @@ Route::prefix('auth')->group(function () {
 });
 
 // Protected API routes
-Route::prefix('v1')->middleware(['auth:api'])->group(function () {
+Route::prefix('v1')->middleware(['auth'])->group(function () {
     Route::apiResources([
         'user'           => UserController::class,
         'jadwal'         => JadwalKelasController::class,
