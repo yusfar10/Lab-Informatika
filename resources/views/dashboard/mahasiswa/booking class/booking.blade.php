@@ -536,7 +536,11 @@
         const penggunaKelasInput = document.getElementById('penggunaKelas');
         if (penggunaKelasInput) {
             // Placeholder - akan diisi dari user data
-            penggunaKelasInput.value = 'Kelas Informatika 5 A'; // Temporary
+            // penggunaKelasInput.value = 'Kelas Informatika 5 A'; // Temporary
+            @if(Auth::check())
+                // Ambil dari database user yang sedang login
+                penggunaKelasInput.value = "{{ Auth::user()->kelas }}";
+            @endif
         }
     }
     

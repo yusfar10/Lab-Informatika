@@ -81,3 +81,8 @@ Route::get('/test403', function () {
     abort(403);
 });
 
+
+// testing
+Route::get('/cekuser', function () {
+    return Auth::user();
+});
