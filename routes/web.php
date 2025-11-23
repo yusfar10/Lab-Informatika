@@ -65,6 +65,10 @@ Route::get('/mahasiswa/datail', function () {
     return view('dashboard.mahasiswa.detail.detail');
 })->name('mahasiswa.detail')->middleware('auth');
 
+Route::get('/mahasiswa/notifikasi', function () {
+    return view('dashboard.mahasiswa.notifikasi.notifikasi');
+})->name('mahasiswa.notifikasi')->middleware('auth');
+
 // PASSWORD RESET ROUTES
 Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');

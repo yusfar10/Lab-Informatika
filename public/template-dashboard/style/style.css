@@ -6,6 +6,9 @@
       background-color: #f2f5fa;
       font-family: 'Poppins', sans-serif;
       padding-top: 70px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Navbar */
@@ -239,6 +242,9 @@
       padding: 20px 0;
       font-size: 14px;
       margin-top: 50px;
+    }
+    #wrapper{
+      flex-grow: 1;
     }
     
     /* Footer full width - keluar dari container */

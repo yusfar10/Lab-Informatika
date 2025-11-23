@@ -29,7 +29,9 @@
                     </li>
                 </ul>
             </li>
-        <li class="nav-item"><img src="{{ asset('template-dashboard/img/Vector.png') }}" class="notifikasi" width="40"></li>
+        <a href="{{ route('mahasiswa.notifikasi') }}">
+          <li class="nav-item"><img src="{{ asset('template-dashboard/img/Vector.png') }}" class="notifikasi" width="40"></li>
+        </a>
       </ul>
     </div>
   </nav>
