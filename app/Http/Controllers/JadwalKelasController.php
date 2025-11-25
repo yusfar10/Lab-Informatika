@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JadwalKelas;
+use App\Models\Laboratorium;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -35,13 +36,20 @@ class JadwalKelasController extends Controller
         }
 
         // Build query
-        $query = JadwalKelas::with('laboratorium:room_id,room_name')
+        $query = JadwalKelas::with('laboratorium:room_id,room_name,is_available')
             ->whereBetween('start_time', [$dateStart, $dateEnd])
             ->where('status', 'schedule'); // Only active schedules
 
         // Filter by room_id if provided
         if ($roomId) {
             $query->where('room_id', $roomId);
+        }
+
+        // Filter hanya_tersedia (only available labs)
+        if ($hanyaTersedia) {
+            $query->whereHas('laboratorium', function ($q) {
+                $q->where('is_available', true);
+            });
         }
 
         // Get schedules
@@ -128,7 +136,97 @@ class JadwalKelasController extends Controller
      */
     public function update(Request $request, JadwalKelas $jadwalKelas)
     {
-        //
+        // Get authenticated user
+        $user = auth()->user();
+
+        // Validasi: user hanya bisa update jadwal yang penanggung_jawab = user name/email
+        if ($jadwalKelas->penanggung_jawab !== $user->name && $jadwalKelas->penanggung_jawab !== $user->email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki izin untuk mengupdate jadwal ini'
+            ], 403);
+        }
+
+        // Validasi input
+        $validator = validator($request->all(), [
+            'class_name' => 'sometimes|required|string|max:255',
+            'room_id' => 'sometimes|required|integer|exists:laboratorium,room_id',
+            'start_time' => 'sometimes|required|date',
+            'end_time' => 'sometimes|required|date|after:start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Jika ada perubahan waktu atau room, lakukan conflict detection
+        $hasTimeOrRoomChange = $request->has('start_time') || $request->has('end_time') || $request->has('room_id');
+
+        if ($hasTimeOrRoomChange) {
+            $newStartTime = $request->input('start_time', $jadwalKelas->start_time);
+            $newEndTime = $request->input('end_time', $jadwalKelas->end_time);
+            $newRoomId = $request->input('room_id', $jadwalKelas->room_id);
+
+            // Parse times
+            $startDateTime = Carbon::parse($newStartTime);
+            $endDateTime = Carbon::parse($newEndTime);
+
+            // Conflict detection logic: Cek apakah lab tersedia di waktu yang diminta
+            $lab = Laboratorium::find($newRoomId);
+            if (!$lab || !$lab->is_available) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Laboratorium tidak tersedia'
+                ], 422);
+            }
+
+            // Conflict detection logic: Cek apakah ada jadwal lain yang overlap
+            // Exclude jadwal yang sedang di-update dari pengecekan
+            $conflictingSchedule = JadwalKelas::where('room_id', $newRoomId)
+                ->where('status', 'schedule')
+                ->where('class_id', '!=', $jadwalKelas->class_id) // Exclude current schedule
+                ->where(function ($query) use ($startDateTime, $endDateTime) {
+                    // Time overlap check:
+                    // Existing schedule overlaps if:
+                    // - Existing start_time < our end_time AND
+                    // - Existing end_time > our start_time
+                    $query->where('start_time', '<', $endDateTime)
+                          ->where('end_time', '>', $startDateTime);
+                })
+                ->with('laboratorium:room_id,room_name')
+                ->first();
+
+            // Jika konflik, return error
+            if ($conflictingSchedule) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jadwal bentrok dengan jadwal lain',
+                    'conflict_with' => [
+                        'class_id' => $conflictingSchedule->class_id,
+                        'class_name' => $conflictingSchedule->class_name,
+                        'room_name' => $conflictingSchedule->laboratorium->room_name ?? 'N/A',
+                        'penanggung_jawab' => $conflictingSchedule->penanggung_jawab,
+                        'start_time' => $conflictingSchedule->start_time,
+                        'end_time' => $conflictingSchedule->end_time,
+                    ]
+                ], 422);
+            }
+        }
+
+        // Jika tidak konflik, update jadwal
+        $updateData = $request->only(['class_name', 'room_id', 'start_time', 'end_time']);
+        $updateData['update_by'] = $user->id;
+
+        $jadwalKelas->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal berhasil diperbarui',
+            'data' => $jadwalKelas->fresh()->load('laboratorium:room_id,room_name')
+        ]);
     }
 
     /**

@@ -50,7 +50,10 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
 
     // Dashboard routes
     Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
-    
+
     // Bookings additional routes
     Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+
+    // Lab additional routes 
+    Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
 });
