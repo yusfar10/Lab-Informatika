@@ -153,7 +153,7 @@
                             <td>Nama Kosma - 3A</td>
                             <td>Lab 1</td>
                             <td>4 SKS</td>
-                            <td><span class="badge-status bg-green">Mk APSI</span></td>
+                            <td class="badge-status bg-green"><span>Mk APSI</span></td>
                         </tr>
                         <tr>
                             <td>2025/11/05 20:44:10</td>

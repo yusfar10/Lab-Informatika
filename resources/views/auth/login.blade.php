@@ -236,7 +236,7 @@
 
             <div class="links">
                 <a href="{{ route('guest.dashboard') }}">Login as Guest</a>
-                <a href="{{ route('password.request') }}">Lupa Password?</a>
+                <a href="{{ route('password.request') }}" target="_blank">Lupa Password?</a>
             </div>
 
             <button type="submit" id="loginButton">Login</button>
