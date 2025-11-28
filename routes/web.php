@@ -90,3 +90,10 @@ Route::get('/test403', function () {
 Route::get('/cekuser', function () {
     return Auth::user();
 });
+
+
+// notifikasi
+Route::view('/notifications', 'notifications')->name('notifications.page');
+
+//demo
+Route::view('/dev/notif-demo', 'dev.notification-demo');
