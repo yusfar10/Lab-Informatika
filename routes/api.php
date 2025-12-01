@@ -36,11 +36,10 @@ Route::prefix('auth')->group(function () {
 });
 
 // Protected API routes
-Route::prefix('v1')->middleware(['auth'])->group(function () {
+Route::prefix('v1')->middleware(['auth:api'])->group(function () {
     Route::apiResources([
         'user'           => UserController::class,
         'jadwal'         => JadwalKelasController::class,
-        'booking'        => BookingsController::class,
         'notification'   => NotificationController::class,
         'change-request' => ChangeRequestController::class,
         'lab'            => LaboratoriumController::class,
@@ -48,11 +47,15 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
         'log'            => LogActivityController::class,
     ]);
 
+    // Booking routes with semester middleware for store method
+    Route::apiResource('booking', BookingsController::class)->except(['store']);
+
     // Dashboard routes
     Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
 
     // Bookings additional routes
     Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
 
     // Lab additional routes 
     Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
