@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\JadwalKelasController;
 use App\Http\Controllers\BookingsController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\ChangeRequestController;
 use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\SessionController;
@@ -59,4 +59,14 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
 
     // Lab additional routes 
     Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
-});
+    
+// NOTIFICATION
+    Route::get('/notification', [NotificationController::class, 'index']);
+    Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
+    Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
+
+}); //
+
+
+

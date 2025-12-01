@@ -9,16 +9,20 @@
     <link rel="icon" type="image" href="{{ asset('images/LogoInformatics.png') }}">
     <link rel="stylesheet" href="{{ asset('template-dashboard/style/style.css') }}">
     <style>
-        #wrapper {
-            flex-grow: 1;
-        }
+        /* CSS yang disesuaikan untuk konsistensi */
 
-        .section-box {
+        /* Menghilangkan flex-grow pada wrapper jika tidak digunakan untuk tata letak full-height */
+        /* #wrapper {
+            flex-grow: 1;
+        } */
+
+        /* Style untuk kotak header dan filter/semester - disamakan */
+        .content-box {
             background: white;
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2px;
+            margin-bottom: 20px; /* Jarak antar kotak */
         }
 
         .title-big {
@@ -33,11 +37,10 @@
             margin-top: 5px;
             color: #666;
         }
-         .box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
+
+        /* Kelas .box lama diganti dengan .content-box untuk konsistensi, 
+           tapi untuk elemen di bawah, kita biarkan saja (Semester Cards dan Filter Box) */
+
         .search-box {
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -53,7 +56,7 @@
         }
         .semester-card {
             background: #ffffff;
-            padding: 22px 0;
+            padding: 52px 0;
             text-align: center;
             border-radius: 10px;
             font-weight: 600;
@@ -90,23 +93,25 @@
 
 <body>
     @include('dashboard.nav.nav-mahasiswa')
-        <div class="container py-4" id="wrapper">
+    <div class="container py-4">
 
-            <!-- Header -->
-            <div class="section-box">
-                <div class="title-big">WEBSITE BOOKING ROOM INFORMATICS CLASS!</div>
-                <div class="subtitle">Please Booking yang tertib ya!</div>
-            </div>
-            <div class="container py-4">
+        <div class="content-box">
+            <div class="title-big">WEBSITE BOOKING ROOM INFORMATICS CLASS!</div>
+            <div class="subtitle">Please Booking yang tertib ya!</div>
+        </div>
 
-                <!-- Search -->
-            <div class="mb-3 position-relative">
+        <div class="mb-4 content-box p-3">
+            <div class="position-relative">
                 <input type="text" class="form-control search-box" placeholder="Search">
-                    <i class="search-icon bi bi-search"></i>
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
             </div>
+        </div>
 
-                <!-- Semester Cards -->
-            <div class="row g-3 mb-4">
+
+        <div class="mb-4">
+            <div class="row g-3">
                 <div class="col-md-4">
                     <div class="semester-card">Semester 1</div>
                 </div>
@@ -117,52 +122,49 @@
                     <div class="semester-card">Semester 5</div>
                 </div>
             </div>
+        </div>
 
-                <!-- Filter Box -->
-                <div class="box">
+        <div class="content-box">
 
-                    <div class="section-title">Perkuliahan</div>
-                    <hr style="margin-top:-5px;">
+            <div class="section-title">Perkuliahan</div>
+            <hr style="margin-top:-5px;">
 
-                    <div class="row g-3 mt-1">
+            <div class="row g-3 mt-1">
 
-                        <div class="col-md-6">
-                            <label class="form-label">Jenis Anggota</label>
-                            <select class="form-select">
-                                <option>Mahasiswa</option>
-                                <option>Dosen</option>
-                            </select>
-                        </div>
+                <div class="col-md-6">
+                    <label class="form-label">Jenis Anggota</label>
+                    <select class="form-select">
+                        <option>Mahasiswa</option>
+                        <option>Dosen</option>
+                    </select>
+                </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Kategori Perkuliahan</label>
-                            <select class="form-select">
-                                <option>Teori</option>
-                                <option>Praktikum</option>
-                            </select>
-                        </div>
+                <div class="col-md-6">
+                    <label class="form-label">Kategori Perkuliahan</label>
+                    <select class="form-select">
+                        <option>Teori</option>
+                        <option>Praktikum</option>
+                    </select>
+                </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal</label>
-                            <input type="date" class="form-control">
-                        </div>
+                <div class="col-md-6">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" class="form-control">
+                </div>
 
-                        <div class="col-md-6 d-grid">
-                            <label class="form-label">&nbsp;</label>
-                            <button class="btn border">ATUR PERKULIAHAN</button>
-                        </div>
-
-                    </div>
-
-                    <button class="btn-blue">C A R I</button>
-
+                <div class="col-md-6 d-grid">
+                    <label class="form-label">&nbsp;</label>
+                    <button class="btn border">ATUR PERKULIAHAN</button>
                 </div>
 
             </div>
 
+            <button class="btn-blue">C A R I</button>
 
         </div>
-    <!-- FOOTER -->
+
+
+    </div>
     <footer>
         Copyright © Kelompok 1 - Manajemen Proyek
     </footer>

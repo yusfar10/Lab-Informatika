@@ -63,11 +63,3 @@ class Notification extends Model
         return $query->where('type', $type);
     }
 
-    /**
-     * Get human readable notification time.
-     */
-    public function getNotificationTimeHumanAttribute()
-    {
-        return $this->notification_time ? Carbon::parse($this->notification_time)->diffForHumans() : null;
-    }
-}
