@@ -17,6 +17,7 @@ class JadwalKelas extends Model
         'end_time',
         'status',
         'update_by',
+        'semester',
     ];
 
     protected $casts = [

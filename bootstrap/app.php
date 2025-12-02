@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+<<<<<<< HEAD
         // Tambahkan middleware Sanctum jika pakai Sanctum
         // Hilangkan sanctum kalau tidak dipakai
     /*
@@ -24,6 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('api', [
             \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
             \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+=======
+        $middleware->alias([
+            'semester' => \App\Http\Middleware\SemesterMiddleware::class,
+>>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

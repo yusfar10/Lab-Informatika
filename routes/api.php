@@ -36,11 +36,14 @@ Route::prefix('auth')->group(function () {
 });
 
 // Protected API routes
+<<<<<<< HEAD
 Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
+=======
+Route::prefix('v1')->middleware(['auth:api'])->group(function () {
+>>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
     Route::apiResources([
         'user'           => UserController::class,
         'jadwal'         => JadwalKelasController::class,
-        'booking'        => BookingsController::class,
         'notification'   => NotificationController::class,
         'change-request' => ChangeRequestController::class,
         'lab'            => LaboratoriumController::class,
@@ -48,12 +51,19 @@ Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
         'log'            => LogActivityController::class,
     ]);
 
+    // Booking routes with semester middleware for store method
+    Route::apiResource('booking', BookingsController::class)->except(['store']);
+
     // Dashboard routes
     Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
 
     // Bookings additional routes
     Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+<<<<<<< HEAD
     Route::get('/bookings/history', [BookingsController::class, 'history']);
+=======
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
+>>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
 
     // Lab additional routes 
     Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');

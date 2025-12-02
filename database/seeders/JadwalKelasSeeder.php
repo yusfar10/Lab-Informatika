@@ -39,7 +39,7 @@ class JadwalKelasSeeder extends Seeder
         // JADWAL KELAS KHUSUS UNTUK LATEST BOOKING
         // (Dengan waktu yang spesifik seperti di hardcode)
         // ============================================
-        // Jadwal 1: 09.00 - 10.00 (untuk latest booking)
+        // Jadwal 1: 09.00 - 10.00 (untuk latest booking) - Semester 1
         $jadwals[] = [
             'class_name' => $classNames[array_rand($classNames)],
             'room_id' => $labs->random()->room_id,
@@ -47,6 +47,7 @@ class JadwalKelasSeeder extends Seeder
             'start_time' => $now->copy()->setTime(9, 0, 0),
             'end_time' => $now->copy()->setTime(10, 0, 0),
             'status' => 'schedule',
+            'semester' => 1,
             'update_by' => $updateBy,
             'created_at' => $now->copy()->subDays(rand(1, 5)),
             'updated_at' => $now->copy()->subDays(rand(1, 5)),
