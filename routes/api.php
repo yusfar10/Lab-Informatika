@@ -35,12 +35,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 });
 
-// Protected API routes
-<<<<<<< HEAD
-Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
-=======
 Route::prefix('v1')->middleware(['auth:api'])->group(function () {
->>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
     Route::apiResources([
         'user'           => UserController::class,
         'jadwal'         => JadwalKelasController::class,
@@ -59,11 +54,80 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
 
     // Bookings additional routes
     Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
-<<<<<<< HEAD
     Route::get('/bookings/history', [BookingsController::class, 'history']);
-=======
     Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
->>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
+
+    // Lab additional routes
+    Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
+    
+// NOTIFICATION
+    Route::get('/notification', [NotificationController::class, 'index']);
+    Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
+    Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
+
+
+}); //
+// Protected API routes
+Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
+    Route::apiResources([
+        'user'           => UserController::class,
+        'jadwal'         => JadwalKelasController::class,
+        'notification'   => NotificationController::class,
+        'change-request' => ChangeRequestController::class,
+        'lab'            => LaboratoriumController::class,
+        'session'        => SessionController::class,
+        'log'            => LogActivityController::class,
+    ]);
+
+    // Booking routes with semester middleware for store method
+    Route::apiResource('booking', BookingsController::class)->except(['store']);
+
+    // Dashboard routes
+    Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
+
+    // Bookings additional routes
+    Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+    Route::get('/bookings/history', [BookingsController::class, 'history']);
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
+
+    // Lab additional routes
+    Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
+
+// NOTIFICATION
+    Route::get('/notification', [NotificationController::class, 'index']);
+    Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
+    Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
+
+
+}); //
+Route::prefix('v1')->middleware(['auth:api'])->group(function () {
+    Route::apiResources([
+        'user'           => UserController::class,
+        'jadwal'         => JadwalKelasController::class,
+        'notification'   => NotificationController::class,
+        'change-request' => ChangeRequestController::class,
+        'lab'            => LaboratoriumController::class,
+        'session'        => SessionController::class,
+        'log'            => LogActivityController::class,
+    ]);
+
+    // Booking routes with semester middleware for store method
+    Route::apiResource('booking', BookingsController::class)->except(['store']);
+
+    // Dashboard routes
+    Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
+
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
+    
+    // Bookings additional routes
+
+    Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+    Route::get('/bookings/history', [BookingsController::class, 'history']);
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
+    Route::post('booking', [BookingsController::class, 'store'])->middleware('semester')->name('booking.store');
+
 
     // Lab additional routes 
     Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
@@ -75,7 +139,7 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
     Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
 
 
-}); //
+});
 
 
 

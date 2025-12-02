@@ -12,23 +12,24 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-<<<<<<< HEAD
+
         // Tambahkan middleware Sanctum jika pakai Sanctum
         // Hilangkan sanctum kalau tidak dipakai
-    /*
-    $middleware->api(prepend: [
-        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-    ]);
-    */
+        /*
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+        */
 
-    // Tambahkan middleware JWT (WAJIB)
+        // Tambahkan middleware JWT (WAJIB)
         $middleware->appendToGroup('api', [
             \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
             \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
-=======
+        ]);
+
+        // Alias middleware dari remote
         $middleware->alias([
             'semester' => \App\Http\Middleware\SemesterMiddleware::class,
->>>>>>> 153921a056bf84f802f54ce09cdcd94fb1819985
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
