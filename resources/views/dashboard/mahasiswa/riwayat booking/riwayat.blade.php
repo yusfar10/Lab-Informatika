@@ -163,11 +163,17 @@
                     <input type="text" class="form-control" placeholder="Search">
                 </div>
 
-                <select class="form-select filter-select">
+                {{-- <select class="form-select filter-select">
                     <option selected>All</option>
                     <option>Aktif</option>
                     <option>Nonaktif</option>
+                </select> --}}
+                <select id="filterStatus" class="form-select filter-select">
+                    <option value="all">All</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Nonaktif</option>
                 </select>
+
 
                 <button class="btn btn-check-blue">Check</button>
             </div>
@@ -184,7 +190,7 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    {{-- <tbody>
                         <tr>
                             <td>2025/11/05 20:44:10</td>
                             <td>Nama Kosma - 3A</td>
@@ -241,6 +247,10 @@
                             <td>3 SKS</td>
                             <td><span class="badge-status bg-primary">MK MP</span></td>
                         </tr>
+                    </tbody> --}}
+                    {{-- <tbody id="riwayat-table-body"></tbody> --}}
+                    <tbody id="table-booking">
+                        <!-- akan diisi oleh JS -->
                     </tbody>
                 </table>
             </div>
@@ -251,6 +261,139 @@
         Copyright © Kelompok 1 - Manajemen Proyek
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- <script type="module">
+        import {
+            fetchRiwayatBookings
+        } from "/js/riwayat-service.js";
+
+        // contoh pakai:
+        fetchRiwayatBookings({
+            status: "completed"
+        }).then(res => {
+            console.log(res);
+        });
+    </script> --}}
+    <script type="module" src="/js/services/api-service.js"></script>
+    <script src="/js/notification.js"></script>
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const token = localStorage.getItem("token"); // token JWT
+            const tableBody = document.getElementById("table-booking");
+            const dropdown = document.getElementById("filterStatus");
+
+            let bookings = []; // semua data dari API disimpan disini
+
+            // 1. Load data dari backend
+            async function loadBookings() {
+                try {
+                    const res = await fetch("/api/v1/booking", {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+
+                    const data = await res.json();
+                    bookings = data.data; // Laravel paginate => data ada di "data"
+
+                    renderTable(bookings);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            // 2. Render ulang table berdasarkan list yg dikirim
+            function renderTable(list) {
+                tableBody.innerHTML = "";
+
+                if (list.length === 0) {
+                    tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        Tidak ada data ditemukan
+                    </td>
+                </tr>
+            `;
+                    return;
+                }
+
+                list.forEach((item, index) => {
+                    tableBody.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.lab_name}</td>
+                    <td>${item.date}</td>
+                    <td>${item.start_time} - ${item.end_time}</td>
+                    <td>${item.status}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">Detail</button>
+                    </td>
+                </tr>
+            `;
+                });
+            }
+
+            // 3. Event saat dropdown diubah
+            dropdown.addEventListener("change", function() {
+                const value = dropdown.value;
+
+                if (value === "all") {
+                    renderTable(bookings);
+                } else {
+                    const filtered = bookings.filter(item =>
+                        item.status.toLowerCase() === value
+                    );
+                    renderTable(filtered);
+                }
+            });
+
+            // 4. Panggil pertama kali
+            loadBookings();
+        });
+    </script> --}}
+    <script>
+        const dropdown = document.getElementById("filterStatus");
+        const tableBody = document.getElementById("table-booking");
+
+        function loadHistory(status = "all") {
+            fetch(`http://localhost:8000/api/bookings/history?status=${status}`)
+                .then(res => res.json())
+                .then(res => {
+                    if (!res.success) return;
+
+                    const data = res.data;
+                    tableBody.innerHTML = "";
+
+                    data.forEach(item => {
+                        tableBody.innerHTML += `
+                        <tr>
+                            <td>${item.created_at ?? '-'}</td>
+                            <td>${item.user?.name ?? '-'}</td>
+                            <td>${item.jadwal_kelas?.room_name ?? '-'}</td>
+                            <td>${item.jadwal_kelas?.duration ?? '-'}</td>
+                            <td>
+                                <span class="badge-status ${item.status === 'active' ? 'bg-success' : 'bg-secondary'}">
+                                    ${item.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    });
+                })
+                .catch(err => console.error(err));
+        }
+
+        // refresh ketika dropdown berubah
+        dropdown.addEventListener("change", () => {
+            loadHistory(dropdown.value);
+        });
+
+        // load default
+        loadHistory();
+    </script>
+
+
+    {{-- <script type="module" src="/js/riwayat-service.js"></script> --}}
+    {{-- <script type="module" src="/js/pages/riwayat.js"></script> --}}
 
 </body>
 

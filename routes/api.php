@@ -36,7 +36,7 @@ Route::prefix('auth')->group(function () {
 });
 
 // Protected API routes
-Route::prefix('v1')->middleware(['auth'])->group(function () {
+Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
     Route::apiResources([
         'user'           => UserController::class,
         'jadwal'         => JadwalKelasController::class,
@@ -53,6 +53,7 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
 
     // Bookings additional routes
     Route::get('bookings/latest', [BookingsController::class, 'latest'])->name('bookings.latest');
+    Route::get('/bookings/history', [BookingsController::class, 'history']);
 
     // Lab additional routes 
     Route::get('lab/available', [LaboratoriumController::class, 'available'])->name('lab.available');
@@ -62,6 +63,7 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
     Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
     Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
     Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
+
 
 }); //
 

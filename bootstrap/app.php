@@ -12,7 +12,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Tambahkan middleware Sanctum jika pakai Sanctum
+        // Hilangkan sanctum kalau tidak dipakai
+    /*
+    $middleware->api(prepend: [
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    ]);
+    */
+
+    // Tambahkan middleware JWT (WAJIB)
+        $middleware->appendToGroup('api', [
+            \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+            \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

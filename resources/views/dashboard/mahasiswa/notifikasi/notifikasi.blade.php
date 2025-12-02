@@ -46,8 +46,71 @@
       </div>
     </div>
 
-    <div id="notificationList"></div>
+    <!-- ============================= -->
+    <!--   NOTIFICATION LIST (STATIC) -->
+    <!-- ============================= -->
 
+    <div id="notificationList">
+
+      <!-- 1 -->
+      <div class="item-notif unread">
+        <span class="badge-category bg-primary">Booking</span>
+        Booking kelas berhasil dibuat.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-01 09:00</div>
+      </div>
+
+      <!-- 2 -->
+      <div class="item-notif unread">
+        <span class="badge-category bg-success">Pengumuman</span>
+        Jadwal kelas telah diperbarui.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-02 11:20</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="item-notif unread">
+        <span class="badge-category bg-warning">Peringatan</span>
+        Booking Anda hampir kadaluarsa.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-03 07:30</div>
+      </div>
+
+      <!-- 4 -->
+      <div class="item-notif">
+        <span class="badge-category bg-primary">Booking</span>
+        Booking diterima oleh admin.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-04 17:00</div>
+      </div>
+
+      <!-- 5 -->
+      <div class="item-notif">
+        <span class="badge-category bg-danger">Peringatan</span>
+        Salah satu ruangan tidak tersedia.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-05 14:12</div>
+      </div>
+
+      <!-- 6 -->
+      <div class="item-notif">
+        <span class="badge-category bg-success">Pengumuman</span>
+        Profil Anda telah diperbarui.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-06 10:40</div>
+      </div>
+
+      <!-- 7 -->
+      <div class="item-notif">
+        <span class="badge-category bg-primary">Booking</span>
+        Pembatalan booking dilakukan admin.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-07 12:00</div>
+      </div>
+
+      <!-- 8 -->
+      <div class="item-notif">
+        <span class="badge-category bg-success">Pengumuman</span>
+        Sistem maintenance pada 10 Januari.
+        <div class="text-muted mt-1" style="font-size:12px;">2025-01-08 16:30</div>
+      </div>
+
+    </div>
+
+    <!-- LOADING STATE -->
     <div id="loadingState" class="text-center my-4" style="display:none;">
       <div class="spinner-border" role="status"></div>
       <p class="mt-2 text-muted">Memuat notifikasi...</p>
@@ -58,8 +121,11 @@
     Copyright © Kelompok 1 - Manajemen Proyek
   </footer>
 
-  <script src="/js/notification-service.js"></script>
-  <script src="/js/notification-page.js"></script>
+  <script src="{{ asset('js/notification-service.js') }}"></script>
+  <script src="{{ asset('js/notification-renderer.js') }}"></script>
+  <script src="{{ asset('js/notification-page.js') }}"></script>
+  <script src="{{ asset('js/notification.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
