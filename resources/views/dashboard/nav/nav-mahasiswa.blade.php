@@ -2,20 +2,26 @@
     <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
     </a>
-    <div class="ms-auto">
-        <ul class="navbar-nav d-flex align-items-center">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+        <ul class="navbar-nav d-flex align-items-center ms-auto">
             <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.dashboard') }}">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.booking-kelas') }}">Booking Class</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.jadwal-kuliah') }}">Jadwal Kuliah</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
-            <!-- DROPDOWN PROFIL -->
+
             <li class="nav-item dropdown">
                 <a href="#" class="d-flex align-items-center" id="profileDropdown" data-bs-toggle="dropdown"
                     aria-expanded="false" style="cursor:pointer;">
                     <img src="{{ asset('template-dashboard/img/user.png') }}" class="rounded-circle ms-3" width="40"
-                        alt="User">
+                        alt="User"> 
                 </a>
 
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
@@ -31,50 +37,45 @@
                     </li>
                 </ul>
             </li>
-            {{-- <a href="{{ route('mahasiswa.notifikasi') }}">
-          <li class="nav-item"><img src="{{ asset('template-dashboard/img/Vector.png') }}" class="notifikasi" width="40"></li>
-        </a> --}}
-            <li class="nav-item position-relative" style="cursor:pointer;">
+
+            <li class="nav-item position-relative ms-3" style="cursor:pointer;">
                 <img id="notifIcon" src="{{ asset('template-dashboard/img/Vector.png') }}" width="40"
                     class="notifikasi">
 
-                <!-- Badge unread -->
                 <span id="notifBadge"
                     style="
-            position:absolute;
-            top:0;
-            right:0;
-            background:#ff3b3b;
-            color:white;
-            border-radius:50%;
-            font-size:10px;
-            padding:2px 6px;
-            display:none;
-          ">
+                        position:absolute;
+                        top:0;
+                        right:0;
+                        background:#ff3b3b;
+                        color:white;
+                        border-radius:50%;
+                        font-size:10px;
+                        padding:2px 6px;
+                        display:none;
+                    ">
                 </span>
 
-                <!-- PANEL NOTIFIKASI -->
                 <div id="notifPanel"
                     style="
-        display:none;
-        position:absolute;
-        top:50px;
-        right:0;
-        width:330px;
-        max-height:420px;
-        overflow-y:auto;
-        background:white;
-        border-radius:12px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.15);
-        z-index:9999;
-        padding:10px;
-    ">
+                        display:none;
+                        position:absolute;
+                        top:50px;
+                        right:0;
+                        width:330px;
+                        max-height:420px;
+                        overflow-y:auto;
+                        background:white;
+                        border-radius:12px;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                        z-index:9999;
+                        padding:10px;
+                    ">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <strong>Notifikasi</strong>
                         <button id="markAllBtn" class="btn btn-sm btn-light">Tandai semua dibaca</button>
                     </div>
 
-                    <!-- Wrapper list notifikasi -->
                     <div id="notifList">
                         <!-- Notifications will be loaded dynamically here -->
                     </div>
@@ -84,6 +85,7 @@
         </ul>
     </div>
 </nav>
+
 <script>
 // Global notification functions (available immediately)
 window.notificationUtils = {
