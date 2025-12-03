@@ -1,0 +1,71 @@
+/* =============================
+   NAVBAR RESPONSIF
+============================= */
+.navbar {
+    display: flex;
+    align-items: center;
+    background: white;
+}
+
+.navbar-brand img {
+    height: 45px;
+}
+
+/* HP & Tablet */
+@media(max-width: 992px) {
+
+    /* Navbar jadi vertical */
+    .navbar-nav {
+        flex-direction: column;
+        gap: 8px;
+        background: white;
+        padding: 10px 0;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 6px 0;
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Profil icon mengecil sedikit */
+    .navbar .rounded-circle {
+        width: 35px !important;
+    }
+
+    /* Notifikasi icon */
+    .notifikasi {
+        width: 32px !important;
+    }
+
+    /* Panel notifikasi menyesuaikan layar */
+    #notifPanel {
+        right: -40px !important;
+        width: 90% !important;
+        max-height: 60vh !important;
+    }
+}
+
+/* HP kecil (≤ 576px) */
+@media(max-width: 576px) {
+
+    /* Brand mengecil */
+    .navbar-brand img {
+        height: 38px;
+    }
+
+    /* Notif panel agak turun biar tidak nabrak */
+    #notifPanel {
+        top: 55px !important;
+        right: -20px !important;
+    }
+
+    /* Badge lebih kecil */
+    #notifBadge {
+        font-size: 8px !important;
+        padding: 1px 4px !important;
+        top: -2px !important;
+        right: -2px !important;
+    }
+}

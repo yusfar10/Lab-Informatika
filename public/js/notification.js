@@ -50,3 +50,33 @@ async function loadRiwayatHaji() {
 document.addEventListener("DOMContentLoaded", function () {
     loadRiwayatHaji();
 });
+
+/* notification.js
+   Safe loader: ensure the other libs are loaded and initialize
+*/
+
+(function () {
+  'use strict';
+
+  // Wait DOM ready
+  function domReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  domReady(function () {
+    // nothing heavy — other files define global objects
+    // But we can attempt to call NotificationPage.loadBadge if present
+    try {
+      if (window.NotificationPage && typeof NotificationPage.loadBadge === 'function') {
+        NotificationPage.loadBadge();
+      }
+    } catch (e) {
+      console.warn('Notification init failed', e);
+    }
+  });
+
+})();
