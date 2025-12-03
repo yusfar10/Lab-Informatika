@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bookings;
 use App\Models\JadwalKelas;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,12 @@ use Carbon\Carbon;
 
 class BookingsController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -103,6 +110,25 @@ class BookingsController extends Controller
                 'class_id' => $jadwalKelas->class_id,
                 'booking_time' => $startDateTime,
             ]);
+
+            // Load relationships yang diperlukan untuk NotificationService
+            $booking->load(['user', 'jadwalKelas.laboratorium']);
+
+            // Hapus debug logging untuk performa lebih baik
+            // \Log::info('Attempting to create notification', [...]);
+
+            // Create notification dengan SKS (optimasi: kurangi logging)
+            try {
+                $this->notificationService->notifyBookingCreated($booking, $sks);
+                // Tidak log success untuk performa lebih baik, hanya log error
+            } catch (\Exception $e) {
+                // Log error but don't fail the booking creation
+                \Log::error('Failed to create notification for booking', [
+                    'booking_id' => $booking->booking_id,
+                    'user_id' => $booking->user_id,
+                    'error' => $e->getMessage()
+                ]);
+            }
 
             return response()->json([
                 'success' => true,

@@ -5,43 +5,98 @@
 let allNotifications = [];
 
 async function loadNotifications() {
-    document.getElementById("loadingState").style.display = "block";
+    const loadingState = document.getElementById("loadingState");
+    const filterCategory = document.getElementById("filterCategory");
+    const filterStatus = document.getElementById("filterStatus");
+    
+    if (loadingState) loadingState.style.display = "block";
 
-    const data = await NotificationService.getAll();
-    allNotifications = data;
+    try {
+        // Build filters from dropdowns
+        const filters = {};
+        if (filterCategory && filterCategory.value) {
+            filters.category = filterCategory.value;
+        }
+        if (filterStatus && filterStatus.value) {
+            filters.status = filterStatus.value;
+        }
 
-    NotificationRenderer.renderList(allNotifications);
+        const data = await NotificationService.getAll(filters);
+        allNotifications = Array.isArray(data) ? data : [];
 
-    document.getElementById("loadingState").style.display = "none";
+        NotificationRenderer.renderList(allNotifications);
+    } catch (error) {
+        console.error("Error loading notifications:", error);
+        const container = document.getElementById("notificationList");
+        if (container) {
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    Gagal memuat notifikasi. Silakan refresh halaman.
+                </div>
+            `;
+        }
+    } finally {
+        if (loadingState) loadingState.style.display = "none";
+    }
 }
 
 function applyFilters() {
-    const category = document.getElementById("filterCategory").value;
-    const status = document.getElementById("filterStatus").value;
+    const category = document.getElementById("filterCategory")?.value;
+    const status = document.getElementById("filterStatus")?.value;
 
     let filtered = allNotifications;
 
     if (category) {
-        filtered = filtered.filter(n => n.type === category);
+        filtered = filtered.filter(n => (n.category || n.type) === category);
     }
     if (status) {
-        filtered = filtered.filter(n => n.status === status);
+        if (status === 'unread') {
+            filtered = filtered.filter(n => !n.is_read);
+        } else if (status === 'read') {
+            filtered = filtered.filter(n => n.is_read);
+        }
     }
 
     NotificationRenderer.renderList(filtered);
 }
 
 async function openNotif(id) {
-    await NotificationService.markAsRead(id);
-    loadNotifications();
+    try {
+        await NotificationService.markAsRead(id);
+        loadNotifications();
+    } catch (error) {
+        console.error("Error marking notification as read:", error);
+    }
 }
 
-document.getElementById("filterCategory").addEventListener("change", applyFilters);
-document.getElementById("filterStatus").addEventListener("change", applyFilters);
+// Initialize when DOM is ready
+document.addEventListener("DOMContentLoaded", function() {
+    const filterCategory = document.getElementById("filterCategory");
+    const filterStatus = document.getElementById("filterStatus");
+    const markAllBtn = document.getElementById("markAllBtn");
 
-document.getElementById("markAllBtn").addEventListener("click", async () => {
-    await NotificationService.markAllRead();
+    if (filterCategory) {
+        filterCategory.addEventListener("change", applyFilters);
+    }
+    if (filterStatus) {
+        filterStatus.addEventListener("change", applyFilters);
+    }
+    if (markAllBtn) {
+        markAllBtn.addEventListener("click", async () => {
+            try {
+                const result = await NotificationService.markAllRead();
+                if (result && result.success) {
+                    // Reload notifications immediately
+                    await loadNotifications();
+                } else {
+                    alert(result?.message || "Gagal menandai semua notifikasi sebagai dibaca");
+                }
+            } catch (error) {
+                console.error("Error marking all as read:", error);
+                alert("Terjadi error saat menandai semua notifikasi sebagai dibaca: " + (error.message || error));
+            }
+        });
+    }
+
     loadNotifications();
 });
-
-loadNotifications();

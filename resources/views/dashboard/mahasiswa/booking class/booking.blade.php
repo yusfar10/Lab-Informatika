@@ -1294,8 +1294,69 @@
             });
             
             if (response.success) {
-                // Success
-                alert('Booking berhasil dibuat!');
+                // Success - Show green alert
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success alert-dismissible fade show';
+                successAlert.setAttribute('role', 'alert');
+                successAlert.innerHTML = `
+                    <strong>Berhasil!</strong> Booking berhasil dibuat!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Insert at top of form
+                const form = document.querySelector('form');
+                if (form) {
+                    form.insertBefore(successAlert, form.firstChild);
+                    // Auto remove after 5 seconds
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 5000);
+                }
+                
+                // Refresh notifications dengan delay untuk memastikan notifikasi sudah tersimpan di database
+                // Coba multiple methods untuk refresh
+                const refreshNotificationMethods = [
+                    () => {
+                        if (typeof window.refreshNotifications === 'function') {
+                            window.refreshNotifications(0);
+                        }
+                    },
+                    () => {
+                        if (typeof window.notificationUtils !== 'undefined' && typeof window.notificationUtils.refresh === 'function') {
+                            window.notificationUtils.refresh(0);
+                        }
+                    },
+                    () => {
+                        if (typeof window.loadUnreadNotifications === 'function') {
+                            window.loadUnreadNotifications();
+                        }
+                        if (typeof window.loadNotificationsList === 'function') {
+                            window.loadNotificationsList();
+                        }
+                    }
+                ];
+                
+                // Refresh cepat setelah 300ms (optimasi untuk response cepat)
+                setTimeout(() => {
+                    refreshNotificationMethods.forEach(method => {
+                        try {
+                            method();
+                        } catch (e) {
+                            console.error('Error refreshing notification:', e);
+                        }
+                    });
+                }, 300); // Kurangi delay dari 1000ms ke 300ms
+                
+                // Retry setelah 1.5 detik untuk memastikan (lebih cepat dari sebelumnya)
+                setTimeout(() => {
+                    refreshNotificationMethods.forEach(method => {
+                        try {
+                            method();
+                        } catch (e) {
+                            console.error('Error refreshing notification (retry):', e);
+                        }
+                    });
+                }, 1500); // Kurangi dari 3000ms ke 1500ms
                 
                 // Reset form
                 document.getElementById('penggunaanKelas').value = '';

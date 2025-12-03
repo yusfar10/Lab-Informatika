@@ -76,22 +76,7 @@
 
                     <!-- Wrapper list notifikasi -->
                     <div id="notifList">
-
-                        <!-- 8 DUMMY NOTIFICATION (BIAR KAMU GAMPANG HAPUS NANTI) -->
-                        @for ($i = 1; $i <= 8; $i++)
-                            <div class="notif-item d-flex align-items-start p-2 mb-2"
-                                style="
-                background:#f8f9fa;
-                border-radius:8px;
-            ">
-                                <div class="flex-grow-1">
-                                    <div style="font-size:14px; font-weight:600;">Dummy Notifikasi {{ $i }}
-                                    </div>
-                                    <div style="font-size:12px; color:#666;">Ini contoh konten pesan notifikasi.</div>
-                                </div>
-                            </div>
-                        @endfor
-
+                        <!-- Notifications will be loaded dynamically here -->
                     </div>
                 </div>
             </li>
@@ -100,6 +85,24 @@
     </div>
 </nav>
 <script>
+// Global notification functions (available immediately)
+window.notificationUtils = {
+    refresh: function(delay = 500) {
+        if (typeof window.refreshNotifications === 'function') {
+            window.refreshNotifications(delay);
+        }
+    },
+    forceRefresh: function() {
+        // Force immediate refresh
+        if (typeof window.loadUnreadNotifications === 'function') {
+            window.loadUnreadNotifications();
+        }
+        if (typeof window.loadNotificationsList === 'function') {
+            window.loadNotificationsList();
+        }
+    }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const notifIcon = document.getElementById("notifIcon");
@@ -107,84 +110,224 @@ document.addEventListener("DOMContentLoaded", function () {
     const notifBadge = document.getElementById("notifBadge");
     const notifList  = document.getElementById("notifList");
     const markAllBtn = document.getElementById("markAllBtn");
+    
+    // Check if elements exist
+    if (!notifIcon || !notifPanel || !notifBadge || !notifList) {
+        console.warn('Notification elements not found');
+        return;
+    }
 
     // Toggle buka/tutup panel
     notifIcon.addEventListener("click", function () {
         notifPanel.style.display =
             notifPanel.style.display === "none" ? "block" : "none";
+        // Load notifications when panel is opened
+        if (notifPanel.style.display === "block") {
+            loadNotifications();
+        }
     });
 
     // Klik luar → tutup panel
     document.addEventListener("click", function (e) {
-        if (!notifIcon.contains(e.target) && !notifPanel.contains(e.target)) {
+        if (notifIcon && notifPanel && !notifIcon.contains(e.target) && !notifPanel.contains(e.target)) {
             notifPanel.style.display = "none";
         }
     });
 
-    // Fetch unread count
-    function loadUnread() {
-        fetch("/api/v1/notification/unread-count", {
-            headers: { "Authorization": "Bearer {{ session('token') }}" }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.count > 0) {
+    // Get CSRF Token
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.content || '';
+    }
+
+    // Fetch unread count (optimasi: fetch lebih cepat)
+    async function loadUnread() {
+        try {
+            const res = await fetch("/api/notification/unread-count", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Cache-Control": "no-cache"
+                },
+                credentials: "same-origin",
+                cache: "no-store" // Tidak cache untuk data real-time
+            });
+            
+            if (!res.ok) return;
+            
+            const data = await res.json();
+            if (data.success && data.count > 0) {
                 notifBadge.style.display = "inline-block";
                 notifBadge.textContent = data.count;
             } else {
                 notifBadge.style.display = "none";
             }
-        })
-        .catch(err => console.error(err));
+        } catch (err) {
+            // Silent fail untuk performa
+            // console.error("Error loading unread count:", err);
+        }
     }
 
     // Load daftar notifikasi
-    function loadNotifications() {
-        fetch("/api/v1/notification", {
-            headers: { "Authorization": "Bearer {{ session('token') }}" }
-        })
-        .then(res => res.json())
-        .then(data => {
+    async function loadNotifications() {
+        try {
+            // Add cache busting to prevent stale data
+            const timestamp = new Date().getTime();
+            const res = await fetch(`/api/notification?t=${timestamp}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Cache-Control": "no-cache"
+                },
+                credentials: "same-origin"
+            });
+            const data = await res.json();
             notifList.innerHTML = "";
 
-            data.data.forEach(item => {
-                notifList.innerHTML += `
-                    <div class="notif-item p-2 mb-2"
-                         style="background:${item.read_at ? '#ffffff' : '#f8f9fa'}; border-radius:8px; cursor:pointer;"
-                         onclick="markAsRead(${item.id})">
-                        <div style="font-size:14px; font-weight:600;">${item.message}</div>
-                        <div style="font-size:12px; color:#555;">${item.created_at}</div>
+            if (data.success && data.data && data.data.length > 0) {
+                // Sort by notification_time descending (newest first)
+                const sorted = data.data.sort((a, b) => {
+                    const timeA = new Date(a.notification_time || a.created_at);
+                    const timeB = new Date(b.notification_time || b.created_at);
+                    return timeB - timeA;
+                });
+                
+                sorted.slice(0, 5).forEach(item => {
+                    const isUnread = !item.is_read;
+                    const category = item.category || item.type || 'booking';
+                    const isBooking = category === 'booking';
+                    const bgColor = isBooking ? '#d1f2eb' : (isUnread ? '#f8f9fa' : '#ffffff');
+                    const borderStyle = isBooking ? 'border-left: 4px solid #27ae60;' : '';
+                    const boxShadow = isBooking ? 'box-shadow: rgba(39, 174, 96, 0.1) 0 3px 6px;' : '';
+                    const time = new Date(item.notification_time || item.created_at).toLocaleString("id-ID", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+                    // Indicator untuk unread (dot biru)
+                    const unreadIndicator = isUnread ? `
+                        <span style="display:inline-block; width:8px; height:8px; background:#007bff; border-radius:50%; margin-right:8px; vertical-align:middle;"></span>
+                    ` : `
+                        <span style="display:inline-block; width:8px; height:8px; background:transparent; margin-right:8px;"></span>
+                    `;
+                    
+                    notifList.innerHTML += `
+                        <div class="notif-item p-2 mb-2"
+                             style="background:${bgColor}; border-radius:8px; cursor:pointer; ${borderStyle} ${boxShadow}"
+                             onclick="markAsRead(${item.notification_id})">
+                            <div style="font-size:14px; font-weight:600; display:flex; align-items:center;">
+                                ${unreadIndicator}
+                                <span>${item.pesan || item.message || 'Notifikasi'}</span>
+                            </div>
+                            <div style="font-size:12px; color:#555; margin-left:16px;">${time}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                notifList.innerHTML = `
+                    <div class="text-center p-3 text-muted" style="font-size:14px;">
+                        Tidak ada notifikasi
                     </div>
                 `;
-            });
-        });
+            }
+        } catch (err) {
+            console.error("Error loading notifications:", err);
+            notifList.innerHTML = `
+                <div class="text-center p-3 text-danger" style="font-size:14px;">
+                    Gagal memuat notifikasi
+                </div>
+            `;
+        }
     }
 
     // Mark single
-    window.markAsRead = function (id) {
-        fetch(`/api/v1/notification/${id}`, {
-            method: "PUT",
-            headers: { "Authorization": "Bearer {{ session('token') }}" }
-        })
-        .then(() => {
+    window.markAsRead = async function (id) {
+        try {
+            await fetch(`/api/notification/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": getCSRFToken()
+                },
+                credentials: "same-origin"
+            });
             loadUnread();
             loadNotifications();
-        });
+        } catch (err) {
+            console.error("Error marking as read:", err);
+        }
     };
 
     // Mark all
-    markAllBtn.addEventListener("click", function () {
-        fetch("/api/v1/notification/mark-all-read", {
-            method: "PUT",
-            headers: { "Authorization": "Bearer {{ session('token') }}" }
-        })
-        .then(() => {
+    markAllBtn.addEventListener("click", async function () {
+        try {
+            const res = await fetch("/api/notification/mark-all-read", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": getCSRFToken()
+                },
+                credentials: "same-origin"
+            });
+            
+            // Check if response is ok
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            
+            const data = await res.json();
+            if (data && data.success) {
+                // Refresh immediately
+                await loadUnread();
+                await loadNotifications();
+            } else {
+                console.error("Failed to mark all as read:", data);
+                alert(data.message || "Gagal menandai semua notifikasi sebagai dibaca");
+            }
+        } catch (err) {
+            console.error("Error marking all as read:", err);
+            alert("Terjadi error saat menandai semua notifikasi sebagai dibaca: " + err.message);
+        }
+    });
+    
+    // Expose function for external refresh (optimasi: delay minimal)
+    window.refreshNotifications = function(delay = 0) {
+        if (delay > 0) {
+            setTimeout(() => {
+                loadUnread();
+                loadNotifications();
+            }, delay);
+        } else {
+            // Immediate refresh tanpa delay
             loadUnread();
             loadNotifications();
-        });
-    });
+        }
+    };
+    
+    // Expose individual functions untuk akses dari luar
+    window.loadUnreadNotifications = loadUnread;
+    window.loadNotificationsList = loadNotifications;
 
     // load awal
     loadUnread();
+    loadNotifications();
+    
+    // Auto-refresh notifications every 15 seconds (lebih cepat dari 30 detik)
+    setInterval(() => {
+        loadUnread();
+        // Only refresh list if panel is open
+        if (notifPanel && notifPanel.style.display !== 'none') {
+            loadNotifications();
+        }
+    }, 15000); // Kurangi dari 30 detik ke 15 detik untuk update lebih cepat
 });
 </script>

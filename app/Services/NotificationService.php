@@ -19,39 +19,94 @@ class NotificationService
      */
     public function createNotification($userId, $message, $type, $relatedId = null, $category = null)
     {
-        return Notification::create([
-            'user_id' => $userId,
-            'message' => $message,
-            'type' => $type,
-            'related_id' => $relatedId,
-            'category' => $category,
-            'is_read' => false,
-        ]);
+        try {
+            // Optimasi: langsung buat array tanpa check fillable berulang-ulang
+            $notification = Notification::create([
+                'user_id' => $userId,
+                'pesan' => $message,
+                'type' => $type,
+                'related_id' => $relatedId,
+                'category' => $category,
+                'notification_time' => now(),
+                'is_read' => false,
+            ]);
+            
+            // Hanya log jika error, untuk performa lebih baik
+            // \Log::info('Notification created in database', [...]);
+            
+            return $notification;
+        } catch (\Exception $e) {
+            \Log::error('Failed to create notification in database', [
+                'user_id' => $userId,
+                'message' => $message,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
     }
 
     /**
      * Create notification for booking created
      *
      * @param Bookings $booking
+     * @param int|null $sks Jumlah SKS (jika tidak diberikan, akan dihitung dari durasi)
      * @return Notification
      */
-    public function notifyBookingCreated(Bookings $booking)
+    public function notifyBookingCreated(Bookings $booking, $sks = null)
     {
-        // Load relationships
-        $booking->load(['jadwalKelas.laboratorium']);
+        // Load jadwalKelas jika belum di-load
+        if (!$booking->relationLoaded('jadwalKelas')) {
+            $booking->load('jadwalKelas');
+        }
 
-        $labName = $booking->jadwalKelas->laboratorium->room_name ?? 'Lab';
-        $time = $booking->jadwalKelas->start_time->format('H:i');
+        // Format waktu dari booking_time
+        $bookingTime = $booking->booking_time ?? now();
+        
+        // Set locale ke Indonesia untuk format tanggal
+        \Carbon\Carbon::setLocale('id');
+        $jam = $bookingTime->format('H:i');
+        $tanggal = $bookingTime->translatedFormat('d F Y'); // Format Indonesia
+        
+        // Hitung SKS jika tidak diberikan
+        if ($sks === null && $booking->jadwalKelas) {
+            $startTime = $booking->jadwalKelas->start_time;
+            $endTime = $booking->jadwalKelas->end_time;
+            if ($startTime && $endTime) {
+                $durasiMenit = $startTime->diffInMinutes($endTime);
+                $sks = round($durasiMenit / 50); // 1 SKS = 50 menit
+            } else {
+                $sks = 1; // Default jika tidak bisa dihitung
+            }
+        } elseif ($sks === null) {
+            $sks = 1; // Default jika tidak ada jadwalKelas
+        }
+        
+        // Format pesan sesuai permintaan: "Booking berhasil dibuat pada {tanggal} di {jam} selama {sks}sks"
+        $message = "Booking berhasil dibuat pada {$tanggal} di {$jam} selama {$sks} sks";
 
-        $message = "Booking {$labName} {$time} berhasil dibuat!";
-
-        return $this->createNotification(
-            $booking->user_id,
-            $message,
-            'booking_created',
-            $booking->booking_id,
-            'booking'
-        );
+        try {
+            $notification = $this->createNotification(
+                $booking->user_id,
+                $message,
+                'booking',
+                $booking->booking_id,
+                'booking'
+            );
+            
+            // Hapus logging untuk performa lebih baik
+            // \Log::info('Notification created successfully', [...]);
+            
+            return $notification;
+        } catch (\Exception $e) {
+            \Log::error('Error creating notification', [
+                'booking_id' => $booking->booking_id,
+                'user_id' => $booking->user_id,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            throw $e;
+        }
     }
 
     /**
