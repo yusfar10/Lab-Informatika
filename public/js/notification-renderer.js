@@ -26,17 +26,16 @@ const NotificationRenderer = {
             const message = n.pesan || n.message || 'Notifikasi';
             const time = n.notification_time || n.created_at;
             const category = n.category || n.type || 'booking';
-            const isBooking = category === 'booking';
             
-            // Indicator untuk unread (dot biru) atau read (checkmark hijau)
+            // Indicator untuk unread (hijau) atau read (abu-abu)
             const readIndicator = isUnread ? `
-                <span style="display:inline-block; width:10px; height:10px; background:#007bff; border-radius:50%; margin-right:8px; vertical-align:middle;" title="Belum dibaca"></span>
+                <span class="read-indicator unread" title="Belum dibaca"></span>
             ` : `
-                <span style="display:inline-block; width:10px; height:10px; background:#28a745; border-radius:50%; margin-right:8px; vertical-align:middle;" title="Sudah dibaca"></span>
+                <span class="read-indicator read" title="Sudah dibaca"></span>
             `;
             
             container.innerHTML += `
-                <div class="item-notif ${isUnread ? "unread" : ""} ${isBooking ? "booking" : ""}" onclick="openNotif(${n.notification_id || n.id})">
+                <div class="item-notif ${isUnread ? "unread" : ""}" onclick="openNotif(${n.notification_id || n.id})">
                     <div style="display:flex; align-items:flex-start;">
                         ${readIndicator}
                         <div style="flex:1;">

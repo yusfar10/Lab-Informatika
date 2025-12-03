@@ -9,17 +9,29 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('template-dashboard/style/style.css') }}">
   <style>
-    .item-notif { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; box-shadow: rgba(0,0,0,0.04) 0 3px 6px; cursor:pointer; transition: all 0.2s ease; }
-    .item-notif.unread { background: #eef3ff; }
-    .item-notif.booking { 
+    .item-notif { 
+      background: #e9ecef; 
+      border-radius: 10px; 
+      padding: 15px; 
+      margin-bottom: 12px; 
+      box-shadow: rgba(0,0,0,0.04) 0 3px 6px; 
+      cursor:pointer; 
+      transition: all 0.2s ease; 
+    }
+    /* Unread = hijau terang */
+    .item-notif.unread { 
       background: #d1f2eb !important; 
-      border-left: 4px solid #27ae60; 
-      box-shadow: rgba(39, 174, 96, 0.1) 0 3px 6px;
+      border-left: 4px solid #27ae60;
     }
-    .item-notif.booking:hover {
-      background: #a8e6cf !important;
+    /* Read = abu-abu */
+    .item-notif:not(.unread) { 
+      background: #e9ecef !important; 
+      border-left: 4px solid #6c757d;
     }
-    .item-notif.booking.unread { background: #d1f2eb !important; }
+    .item-notif:hover {
+      transform: translateY(-2px);
+      box-shadow: rgba(0,0,0,0.1) 0 4px 8px;
+    }
     .badge-category { padding: 5px 12px; border-radius: 6px; color: white; font-size:12px; margin-right:10px; }
     /* Indicator untuk read/unread */
     .read-indicator {
@@ -31,10 +43,10 @@
       vertical-align: middle;
     }
     .read-indicator.unread {
-      background: #007bff;
+      background: #27ae60;
     }
     .read-indicator.read {
-      background: #28a745;
+      background: #6c757d;
     }
   </style>
 </head>
@@ -76,7 +88,9 @@
 
     <!-- LOADING STATE -->
     <div id="loadingState" class="text-center my-4" style="display:none;">
-      <div class="spinner-border" role="status"></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
       <p class="mt-2 text-muted">Memuat notifikasi...</p>
     </div>
   </div>
@@ -87,8 +101,7 @@
 
   <script src="{{ asset('js/notification-service.js') }}"></script>
   <script src="{{ asset('js/notification-renderer.js') }}"></script>
-  <script src="{{ asset('js/notification-page.js') }}"></script>
-  <script src="{{ asset('js/notification.js') }}"></script>
+  <script src="{{ asset('js/notification-page-full.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

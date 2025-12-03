@@ -73,7 +73,10 @@
                     ">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <strong>Notifikasi</strong>
-                        <button id="markAllBtn" class="btn btn-sm btn-light">Tandai semua dibaca</button>
+                        <div class="d-flex gap-1">
+                            <a href="{{ route('mahasiswa.notifikasi') }}" class="btn btn-sm btn-primary" style="text-decoration:none;">ALL</a>
+                            <button id="markAllBtn" class="btn btn-sm btn-light">Tandai semua dibaca</button>
+                        </div>
                     </div>
 
                     <div id="notifList">
@@ -117,6 +120,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!notifIcon || !notifPanel || !notifBadge || !notifList) {
         console.warn('Notification elements not found');
         return;
+    }
+    
+    // Check markAllBtn separately karena bisa null di beberapa halaman
+    if (!markAllBtn) {
+        console.warn('markAllBtn not found - will skip mark all functionality');
     }
 
     // Toggle buka/tutup panel
@@ -197,13 +205,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     return timeB - timeA;
                 });
                 
-                sorted.slice(0, 5).forEach(item => {
+                // Ambil hanya 5 notifikasi terbaru
+                const latestNotifications = sorted.slice(0, 5);
+                const totalCount = sorted.length;
+                const hasMore = totalCount > 5;
+                
+                latestNotifications.forEach(item => {
                     const isUnread = !item.is_read;
-                    const category = item.category || item.type || 'booking';
-                    const isBooking = category === 'booking';
-                    const bgColor = isBooking ? '#d1f2eb' : (isUnread ? '#f8f9fa' : '#ffffff');
-                    const borderStyle = isBooking ? 'border-left: 4px solid #27ae60;' : '';
-                    const boxShadow = isBooking ? 'box-shadow: rgba(39, 174, 96, 0.1) 0 3px 6px;' : '';
+                    // Unread = hijau, Read = abu-abu (sama dengan halaman notifikasi)
+                    const bgColor = isUnread ? '#d1f2eb' : '#e9ecef';
+                    const borderColor = isUnread ? '#27ae60' : '#6c757d';
+                    const borderStyle = `border-left: 4px solid ${borderColor};`;
+                    const boxShadow = isUnread ? 'box-shadow: rgba(39, 174, 96, 0.1) 0 3px 6px;' : 'box-shadow: rgba(0,0,0,0.04) 0 3px 6px;';
                     const time = new Date(item.notification_time || item.created_at).toLocaleString("id-ID", {
                         year: "numeric",
                         month: "short",
@@ -211,25 +224,39 @@ document.addEventListener("DOMContentLoaded", function () {
                         hour: "2-digit",
                         minute: "2-digit"
                     });
-                    // Indicator untuk unread (dot biru)
-                    const unreadIndicator = isUnread ? `
-                        <span style="display:inline-block; width:8px; height:8px; background:#007bff; border-radius:50%; margin-right:8px; vertical-align:middle;"></span>
-                    ` : `
-                        <span style="display:inline-block; width:8px; height:8px; background:transparent; margin-right:8px;"></span>
+                    // Indicator untuk unread (dot hijau) atau read (dot abu-abu)
+                    const indicatorColor = isUnread ? '#27ae60' : '#6c757d';
+                    const unreadIndicator = `
+                        <span style="display:inline-block; width:10px; height:10px; background:${indicatorColor}; border-radius:50%; margin-right:8px; vertical-align:middle;" title="${isUnread ? 'Belum dibaca' : 'Sudah dibaca'}"></span>
                     `;
                     
                     notifList.innerHTML += `
                         <div class="notif-item p-2 mb-2"
-                             style="background:${bgColor}; border-radius:8px; cursor:pointer; ${borderStyle} ${boxShadow}"
+                             style="background:${bgColor}; border-radius:8px; cursor:pointer; ${borderStyle} ${boxShadow}; transition: all 0.2s ease;"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='rgba(0,0,0,0.1) 0 4px 8px';"
+                             onmouseout="this.style.transform=''; this.style.boxShadow='${boxShadow}';"
                              onclick="markAsRead(${item.notification_id})">
                             <div style="font-size:14px; font-weight:600; display:flex; align-items:center;">
                                 ${unreadIndicator}
                                 <span>${item.pesan || item.message || 'Notifikasi'}</span>
                             </div>
-                            <div style="font-size:12px; color:#555; margin-left:16px;">${time}</div>
+                            <div style="font-size:12px; color:#555; margin-left:18px;">${time}</div>
                         </div>
                     `;
                 });
+                
+                // Tampilkan pesan jika ada lebih dari 5 notifikasi
+                if (hasMore) {
+                    const remainingCount = totalCount - 5;
+                    notifList.innerHTML += `
+                        <div class="text-center p-2 mt-2" style="border-top: 1px solid #e0e0e0;">
+                            <a href="{{ route('mahasiswa.notifikasi') }}" 
+                               style="color: #007bff; text-decoration: none; font-size: 13px; font-weight: 600;">
+                                Lihat ${remainingCount} notifikasi lainnya
+                            </a>
+                        </div>
+                    `;
+                }
             } else {
                 notifList.innerHTML = `
                     <div class="text-center p-3 text-muted" style="font-size:14px;">
@@ -267,39 +294,41 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Mark all
-    markAllBtn.addEventListener("click", async function () {
-        try {
-            const res = await fetch("/api/notification/mark-all-read", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": getCSRFToken()
-                },
-                credentials: "same-origin"
-            });
-            
-            // Check if response is ok
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+    // Mark all (dengan check null)
+    if (markAllBtn) {
+        markAllBtn.addEventListener("click", async function () {
+            try {
+                const res = await fetch("/api/notification/mark-all-read", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": getCSRFToken()
+                    },
+                    credentials: "same-origin"
+                });
+                
+                // Check if response is ok
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                const data = await res.json();
+                if (data && data.success) {
+                    // Refresh immediately
+                    await loadUnread();
+                    await loadNotifications();
+                } else {
+                    console.error("Failed to mark all as read:", data);
+                    alert(data.message || "Gagal menandai semua notifikasi sebagai dibaca");
+                }
+            } catch (err) {
+                console.error("Error marking all as read:", err);
+                alert("Terjadi error saat menandai semua notifikasi sebagai dibaca: " + err.message);
             }
-            
-            const data = await res.json();
-            if (data && data.success) {
-                // Refresh immediately
-                await loadUnread();
-                await loadNotifications();
-            } else {
-                console.error("Failed to mark all as read:", data);
-                alert(data.message || "Gagal menandai semua notifikasi sebagai dibaca");
-            }
-        } catch (err) {
-            console.error("Error marking all as read:", err);
-            alert("Terjadi error saat menandai semua notifikasi sebagai dibaca: " + err.message);
-        }
-    });
+        });
+    }
     
     // Expose function for external refresh (optimasi: delay minimal)
     window.refreshNotifications = function(delay = 0) {

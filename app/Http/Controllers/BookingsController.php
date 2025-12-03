@@ -74,6 +74,47 @@ class BookingsController extends Controller
             $startDateTime = Carbon::parse("{$tanggal} {$jamMulai}");
             $endDateTime = $startDateTime->copy()->addMinutes($durasiMenit);
 
+            // Validasi: Tanggal booking tidak boleh di masa lalu
+            $today = Carbon::today();
+            $selectedDate = Carbon::parse($tanggal)->startOfDay();
+            if ($selectedDate->isPast() && !$selectedDate->isToday()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.'
+                ], 422);
+            }
+
+            // Validasi: Jam booking harus dalam jam kerja (07:00 - 17:30)
+            $jamMulaiCarbon = Carbon::parse($jamMulai);
+            $jamKerjaMulai = Carbon::parse('07:00');
+            $jamKerjaAkhir = Carbon::parse('17:30');
+            
+            if ($jamMulaiCarbon->lt($jamKerjaMulai) || $jamMulaiCarbon->gt($jamKerjaAkhir)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jam booking harus dalam jam kerja (07:00 - 17:30).'
+                ], 422);
+            }
+
+            // Validasi: Jika tanggal hari ini, jam tidak boleh di masa lalu
+            if ($selectedDate->isToday()) {
+                $now = Carbon::now();
+                if ($startDateTime->isPast()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tidak dapat memilih waktu yang sudah lampau. Silakan pilih waktu yang akan datang.'
+                    ], 422);
+                }
+            }
+            
+            // Validasi: Waktu selesai tidak boleh melewati jam kerja (17:30)
+            if ($endDateTime->format('H:i') > '17:30') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Waktu selesai booking tidak boleh melewati jam kerja (17:30).'
+                ], 422);
+            }
+
             // Check for conflicts
             $hasConflict = JadwalKelas::where('room_id', $roomId)
                 ->where('status', 'schedule')
