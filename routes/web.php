@@ -42,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/lab', [App\Http\Controllers\LaboratoriumController::class, 'index'])->name('lab.index.web');
     Route::get('/api/lab/available', [App\Http\Controllers\LaboratoriumController::class, 'available'])->name('lab.available.web');
     Route::get('/api/jadwal', [App\Http\Controllers\JadwalKelasController::class, 'index'])->name('jadwal.index.web');
+    
+    // Notification routes (urutan penting: route spesifik dulu, baru route dengan parameter)
+    Route::get('/api/notification', [App\Http\Controllers\NotificationController::class, 'index'])->name('notification.index.web');
+    Route::get('/api/notification/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notification.unread-count.web');
+    Route::put('/api/notification/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notification.mark-all-read.web');
+    Route::put('/api/notification/{id}', [App\Http\Controllers\NotificationController::class, 'update'])->name('notification.update.web');
 });
 
 Route::get('/mahasiswa/riwayat', function () {

@@ -16,6 +16,8 @@ class Notification extends Model
         'notification_time',
         'is_read',
         'type',
+        'related_id',
+        'category',
     ];
 
     protected $casts = [
@@ -62,5 +64,4 @@ class Notification extends Model
     {
         return $query->where('type', $type);
     }
-
 }

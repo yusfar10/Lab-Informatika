@@ -178,7 +178,7 @@
                     <input type="date" class="form-control mb-2" id="tanggalBooking" min="{{ date('Y-m-d') }}">
 
                     <label class="fw-semibold">Jam Mulai</label>
-                    <input type="time" class="form-control mb-2" id="jamMulai" step="300">
+                    <input type="time" class="form-control mb-2" id="jamMulai" step="300" min="07:00" max="17:30">
 
                     <label class="fw-semibold">SKS (max 4)</label>
                     <input type="number" min="1" max="4" class="form-control mb-2" id="sksInput" value="1">
@@ -1038,6 +1038,111 @@
         }
     }
     
+    // ============================================
+    // VALIDASI WAKTU BOOKING
+    // ============================================
+    
+    /**
+     * Update min attribute untuk input time berdasarkan tanggal yang dipilih
+     * Jika tanggal adalah hari ini, waktu minimum adalah waktu sekarang
+     */
+    function updateTimeMinAttribute() {
+        const tanggalInput = document.getElementById('tanggalBooking');
+        const jamInput = document.getElementById('jamMulai');
+        
+        if (!tanggalInput || !jamInput) return;
+        
+        const selectedDate = new Date(tanggalInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        // Set max time ke jam kerja akhir (17:30)
+        jamInput.max = '17:30';
+        
+        // Jika tanggal yang dipilih adalah hari ini, set min time ke waktu sekarang + 5 menit (minimal 07:00)
+        if (selectedDate.getTime() === today.getTime()) {
+            const now = new Date();
+            const hours = now.getHours();
+            const mins = now.getMinutes();
+            
+            // Jika sudah melewati jam kerja, set ke jam kerja awal
+            if (hours > 17 || (hours === 17 && mins >= 30)) {
+                jamInput.min = '07:00';
+            } else {
+                // Set min time ke waktu sekarang + 5 menit, tapi minimal 07:00
+                const minutes = Math.ceil((mins + 5) / 5) * 5;
+                let minHours = hours;
+                let minMinutes = minutes;
+                
+                if (minutes >= 60) {
+                    minHours = hours + 1;
+                    minMinutes = 0;
+                }
+                
+                // Pastikan minimal 07:00
+                if (minHours < 7 || (minHours === 7 && minMinutes === 0)) {
+                    jamInput.min = '07:00';
+                } else {
+                    jamInput.min = `${String(minHours).padStart(2, '0')}:${String(minMinutes).padStart(2, '0')}`;
+                }
+            }
+        } else {
+            // Jika tanggal di masa depan, set min time ke jam kerja awal (07:00)
+            jamInput.min = '07:00';
+        }
+    }
+    
+    /**
+     * Validasi tanggal: cek apakah tanggal sudah lampau
+     */
+    function validateDate() {
+        const tanggalInput = document.getElementById('tanggalBooking');
+        
+        if (!tanggalInput || !tanggalInput.value) {
+            return true; // Belum lengkap, skip validasi
+        }
+        
+        const selectedDate = new Date(tanggalInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+            alert('Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.');
+            tanggalInput.value = '';
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Validasi jam: cek apakah jam dalam jam kerja (07:00 - 17:30)
+     */
+    function validateTime() {
+        const jamInput = document.getElementById('jamMulai');
+        
+        if (!jamInput || !jamInput.value) {
+            return true; // Belum lengkap, skip validasi
+        }
+        
+        const selectedTime = jamInput.value;
+        const [hours, minutes] = selectedTime.split(':').map(Number);
+        const selectedMinutes = hours * 60 + minutes;
+        
+        const jamKerjaMulai = 7 * 60; // 07:00 = 420 menit
+        const jamKerjaAkhir = 17 * 60 + 30; // 17:30 = 1050 menit
+        
+        if (selectedMinutes < jamKerjaMulai || selectedMinutes > jamKerjaAkhir) {
+            alert('Jam booking harus dalam jam kerja (07:00 - 17:30).');
+            jamInput.value = '';
+            return false;
+        }
+        
+        return true;
+    }
+    
     // INITIALIZE BOOKING PAGE
     // ============================================
     function initBookingPage() {
@@ -1058,12 +1163,16 @@
         });
         document.getElementById('jamMulai').addEventListener('change', function() {
             if (!window.isAutoFilling) {
+                validateTime();
                 calculateSelesai();
             }
         });
         document.getElementById('tanggalBooking').addEventListener('change', function() {
             if (!window.isAutoFilling) {
-                fetchAvailableLabs();
+                if (validateDate()) {
+                    updateTimeMinAttribute();
+                    fetchAvailableLabs();
+                }
             }
         });
         
@@ -1081,6 +1190,9 @@
         if (filterTanggal && !filterTanggal.value) {
             filterTanggal.value = new Date().toISOString().split('T')[0];
         }
+        
+        // Set min time untuk tanggal booking jika tanggal adalah hari ini
+        updateTimeMinAttribute();
         
         // Initial: populate all labs (jika belum di-fill dari URL)
         if (!window.isAutoFilling) {
@@ -1278,6 +1390,63 @@
             return;
         }
         
+        // Validasi: Tanggal tidak boleh di masa lalu
+        const selectedDate = new Date(tanggal);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+            alert('Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.');
+            document.getElementById('tanggalBooking').focus();
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = originalText;
+            return;
+        }
+        
+        // Validasi: Jam harus dalam jam kerja (07:00 - 17:30)
+        const [hours, minutes] = jamMulai.split(':').map(Number);
+        const selectedMinutes = hours * 60 + minutes;
+        const jamKerjaMulai = 7 * 60; // 07:00 = 420 menit
+        const jamKerjaAkhir = 17 * 60 + 30; // 17:30 = 1050 menit
+        
+        if (selectedMinutes < jamKerjaMulai || selectedMinutes > jamKerjaAkhir) {
+            alert('Jam booking harus dalam jam kerja (07:00 - 17:30).');
+            document.getElementById('jamMulai').focus();
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = originalText;
+            return;
+        }
+        
+        // Validasi: Jika tanggal hari ini, jam tidak boleh di masa lalu
+        if (selectedDate.getTime() === today.getTime()) {
+            const selectedDateTime = new Date(tanggal);
+            selectedDateTime.setHours(hours, minutes, 0, 0);
+            const now = new Date();
+            
+            if (selectedDateTime < now) {
+                alert('Tidak dapat memilih waktu yang sudah lampau. Silakan pilih waktu yang akan datang.');
+                document.getElementById('jamMulai').focus();
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = originalText;
+                return;
+            }
+        }
+        
+        // Validasi: Waktu selesai tidak boleh melewati jam kerja (17:30)
+        const durasiMenit = sks * 50;
+        const endMinutes = selectedMinutes + durasiMenit;
+        const endHours = Math.floor(endMinutes / 60);
+        const endMins = endMinutes % 60;
+        
+        if (endHours > 17 || (endHours === 17 && endMins > 30)) {
+            alert('Waktu selesai booking tidak boleh melewati jam kerja (17:30).');
+            document.getElementById('sksInput').focus();
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = originalText;
+            return;
+        }
+        
         // Disable button & show loading
         btnSubmit.disabled = true;
         btnSubmit.textContent = 'Memproses...';
@@ -1295,8 +1464,69 @@
             });
             
             if (response.success) {
-                // Success
-                alert('Booking berhasil dibuat!');
+                // Success - Show green alert
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success alert-dismissible fade show';
+                successAlert.setAttribute('role', 'alert');
+                successAlert.innerHTML = `
+                    <strong>Berhasil!</strong> Booking berhasil dibuat!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Insert at top of form
+                const form = document.querySelector('form');
+                if (form) {
+                    form.insertBefore(successAlert, form.firstChild);
+                    // Auto remove after 5 seconds
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 5000);
+                }
+                
+                // Refresh notifications dengan delay untuk memastikan notifikasi sudah tersimpan di database
+                // Coba multiple methods untuk refresh
+                const refreshNotificationMethods = [
+                    () => {
+                        if (typeof window.refreshNotifications === 'function') {
+                            window.refreshNotifications(0);
+                        }
+                    },
+                    () => {
+                        if (typeof window.notificationUtils !== 'undefined' && typeof window.notificationUtils.refresh === 'function') {
+                            window.notificationUtils.refresh(0);
+                        }
+                    },
+                    () => {
+                        if (typeof window.loadUnreadNotifications === 'function') {
+                            window.loadUnreadNotifications();
+                        }
+                        if (typeof window.loadNotificationsList === 'function') {
+                            window.loadNotificationsList();
+                        }
+                    }
+                ];
+                
+                // Refresh cepat setelah 300ms (optimasi untuk response cepat)
+                setTimeout(() => {
+                    refreshNotificationMethods.forEach(method => {
+                        try {
+                            method();
+                        } catch (e) {
+                            console.error('Error refreshing notification:', e);
+                        }
+                    });
+                }, 300); // Kurangi delay dari 1000ms ke 300ms
+                
+                // Retry setelah 1.5 detik untuk memastikan (lebih cepat dari sebelumnya)
+                setTimeout(() => {
+                    refreshNotificationMethods.forEach(method => {
+                        try {
+                            method();
+                        } catch (e) {
+                            console.error('Error refreshing notification (retry):', e);
+                        }
+                    });
+                }, 1500); // Kurangi dari 3000ms ke 1500ms
                 
                 // Reset form
                 document.getElementById('penggunaanKelas').value = '';

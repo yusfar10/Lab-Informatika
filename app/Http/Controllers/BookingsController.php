@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bookings;
 use App\Models\JadwalKelas;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,12 @@ use Carbon\Carbon;
 
 class BookingsController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -67,6 +74,47 @@ class BookingsController extends Controller
             $startDateTime = Carbon::parse("{$tanggal} {$jamMulai}");
             $endDateTime = $startDateTime->copy()->addMinutes($durasiMenit);
 
+            // Validasi: Tanggal booking tidak boleh di masa lalu
+            $today = Carbon::today();
+            $selectedDate = Carbon::parse($tanggal)->startOfDay();
+            if ($selectedDate->isPast() && !$selectedDate->isToday()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.'
+                ], 422);
+            }
+
+            // Validasi: Jam booking harus dalam jam kerja (07:00 - 17:30)
+            $jamMulaiCarbon = Carbon::parse($jamMulai);
+            $jamKerjaMulai = Carbon::parse('07:00');
+            $jamKerjaAkhir = Carbon::parse('17:30');
+            
+            if ($jamMulaiCarbon->lt($jamKerjaMulai) || $jamMulaiCarbon->gt($jamKerjaAkhir)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jam booking harus dalam jam kerja (07:00 - 17:30).'
+                ], 422);
+            }
+
+            // Validasi: Jika tanggal hari ini, jam tidak boleh di masa lalu
+            if ($selectedDate->isToday()) {
+                $now = Carbon::now();
+                if ($startDateTime->isPast()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tidak dapat memilih waktu yang sudah lampau. Silakan pilih waktu yang akan datang.'
+                    ], 422);
+                }
+            }
+            
+            // Validasi: Waktu selesai tidak boleh melewati jam kerja (17:30)
+            if ($endDateTime->format('H:i') > '17:30') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Waktu selesai booking tidak boleh melewati jam kerja (17:30).'
+                ], 422);
+            }
+
             // Check for conflicts
             $hasConflict = JadwalKelas::where('room_id', $roomId)
                 ->where('status', 'schedule')
@@ -103,6 +151,25 @@ class BookingsController extends Controller
                 'class_id' => $jadwalKelas->class_id,
                 'booking_time' => $startDateTime,
             ]);
+
+            // Load relationships yang diperlukan untuk NotificationService
+            $booking->load(['user', 'jadwalKelas.laboratorium']);
+
+            // Hapus debug logging untuk performa lebih baik
+            // \Log::info('Attempting to create notification', [...]);
+
+            // Create notification dengan SKS (optimasi: kurangi logging)
+            try {
+                $this->notificationService->notifyBookingCreated($booking, $sks);
+                // Tidak log success untuk performa lebih baik, hanya log error
+            } catch (\Exception $e) {
+                // Log error but don't fail the booking creation
+                \Log::error('Failed to create notification for booking', [
+                    'booking_id' => $booking->booking_id,
+                    'user_id' => $booking->user_id,
+                    'error' => $e->getMessage()
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
