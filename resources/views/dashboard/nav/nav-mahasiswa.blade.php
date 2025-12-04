@@ -3,7 +3,7 @@
         <img src="{{ asset('template-dashboard/img/LogoInformatics.png') }}" alt="Logo">
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    <button class="navbar-toggler hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -65,7 +65,7 @@
                         width:330px;
                         max-height:420px;
                         overflow-y:auto;
-                        background:white;
+                        background:rgb(150, 150, 150);
                         border-radius:12px;
                         box-shadow:0 4px 12px rgba(0,0,0,0.15);
                         z-index:9999;
@@ -99,6 +99,17 @@
         </ul>
     </div>
 </nav>
+<style>
+    .hamburger{
+        background-color: aliceblue;
+    }
+    .navbar-toggler:focus {
+    /* Menghilangkan border dan box-shadow yang digunakan Bootstrap untuk focus state */
+    box-shadow: none; 
+    outline: none;
+    /* Ini memastikan elemen tidak menunjukkan fokus standar browser */
+}
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
