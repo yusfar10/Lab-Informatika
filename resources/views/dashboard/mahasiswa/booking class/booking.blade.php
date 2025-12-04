@@ -198,9 +198,10 @@
                 </div>
             </div>
 
+            
             <!-- JADWAL -->
             <div class="col-md-9">
-                <h4 class="fw-bold mb-3">Jadwal Laboratorium</h4>
+                <h4 class="fw-bold mb-3 mt-4">Jadwal Laboratorium</h4>
 
                 <div class="row padding-tanggal">
                     <div class="col-md-4">

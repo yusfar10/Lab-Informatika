@@ -42,7 +42,8 @@
             font-weight: 600;
             background: #f8f9fa;
         }
-        .baris{
+
+        .baris {
             min-width: 1240px;
         }
     </style>
@@ -138,7 +139,7 @@
                             <td>Rabu</td>
                             <td>13.30–15.45</td>
                             <td>AWD</td>
-                            <td>Pak Saikuy</td>
+                            <td>Pak Saluky</td>
                             <td>Lab 1</td>
                         </tr>
                     </tbody>
