@@ -175,7 +175,7 @@
                     <input type="text" class="form-control mb-2" id="penggunaanKelas" placeholder="Contoh: Pembelajaran MK Alpro 2">
 
                     <label class="fw-semibold">Tanggal Booking</label>
-                    <input type="date" class="form-control mb-2" id="tanggalBooking" min="{{ date('Y-m-d') }}">
+                    <input type="date" class="form-control mb-2" id="tanggalBooking">
 
                     <label class="fw-semibold">Jam Mulai</label>
                     <input type="time" class="form-control mb-2" id="jamMulai" step="300" min="07:00" max="17:30">
@@ -206,7 +206,7 @@
                 <div class="row padding-tanggal">
                     <div class="col-md-4">
                         <label>Pilih Tanggal</label>
-                        <input type="date" class="form-control" id="filterTanggal" min="{{ date('Y-m-d') }}">
+                        <input type="date" class="form-control" id="filterTanggal">
                     </div>
 
                     <div class="col-md-4">
@@ -599,7 +599,26 @@
     // FETCH & RENDER SCHEDULE TABLE
     // ============================================
     async function fetchSchedule() {
-        const tanggal = document.getElementById('filterTanggal').value || new Date().toISOString().split('T')[0];
+        // Ambil tanggal dari input, pastikan format YYYY-MM-DD
+        const tanggalInput = document.getElementById('filterTanggal');
+        let tanggal = '';
+        
+        if (tanggalInput && tanggalInput.value) {
+            // Pastikan format YYYY-MM-DD (format dari input type="date" sudah benar)
+            tanggal = tanggalInput.value;
+        } else {
+            // Default ke hari ini dengan format YYYY-MM-DD
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            tanggal = `${year}-${month}-${day}`;
+            
+            // Set nilai default ke input
+            if (tanggalInput) {
+                tanggalInput.value = tanggal;
+            }
+        }
         const roomId = document.getElementById('filterLabSelect').value;
         const hanyaTersedia = document.getElementById('hanyaTersedia').checked;
         const perMinggu = document.getElementById('perMinggu').checked;
@@ -1097,23 +1116,8 @@
      * Validasi tanggal: cek apakah tanggal sudah lampau
      */
     function validateDate() {
-        const tanggalInput = document.getElementById('tanggalBooking');
-        
-        if (!tanggalInput || !tanggalInput.value) {
-            return true; // Belum lengkap, skip validasi
-        }
-        
-        const selectedDate = new Date(tanggalInput.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        selectedDate.setHours(0, 0, 0, 0);
-        
-        if (selectedDate < today) {
-            alert('Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.');
-            tanggalInput.value = '';
-            return false;
-        }
-        
+        // Validasi tanggal tidak lagi memblokir di sini
+        // Validasi akan dilakukan saat submit booking
         return true;
     }
     
@@ -1169,10 +1173,10 @@
         });
         document.getElementById('tanggalBooking').addEventListener('change', function() {
             if (!window.isAutoFilling) {
-                if (validateDate()) {
-                    updateTimeMinAttribute();
-                    fetchAvailableLabs();
-                }
+                // Tidak perlu validasi yang memblokir di sini
+                // Validasi akan dilakukan saat submit booking
+                updateTimeMinAttribute();
+                fetchAvailableLabs();
             }
         });
         
@@ -1188,7 +1192,22 @@
         // Set default tanggal filter ke hari ini (jika tidak ada dari URL)
         const filterTanggal = document.getElementById('filterTanggal');
         if (filterTanggal && !filterTanggal.value) {
-            filterTanggal.value = new Date().toISOString().split('T')[0];
+            // Format YYYY-MM-DD untuk konsistensi
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            filterTanggal.value = `${year}-${month}-${day}`;
+        }
+        
+        // Set min attribute untuk tanggal booking (hari ini)
+        const tanggalBooking = document.getElementById('tanggalBooking');
+        if (tanggalBooking) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            tanggalBooking.min = `${year}-${month}-${day}`;
         }
         
         // Set min time untuk tanggal booking jika tanggal adalah hari ini
@@ -1390,19 +1409,8 @@
             return;
         }
         
-        // Validasi: Tanggal tidak boleh di masa lalu
-        const selectedDate = new Date(tanggal);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        selectedDate.setHours(0, 0, 0, 0);
-        
-        if (selectedDate < today) {
-            alert('Tidak dapat memilih tanggal yang sudah lampau. Silakan pilih tanggal hari ini atau yang akan datang.');
-            document.getElementById('tanggalBooking').focus();
-            btnSubmit.disabled = false;
-            btnSubmit.textContent = originalText;
-            return;
-        }
+        // Validasi tanggal akan dilakukan di backend
+        // Tidak ada validasi frontend yang memblokir untuk menghindari masalah timezone
         
         // Validasi: Jam harus dalam jam kerja (07:00 - 17:30)
         const [hours, minutes] = jamMulai.split(':').map(Number);
@@ -1419,17 +1427,24 @@
         }
         
         // Validasi: Jika tanggal hari ini, jam tidak boleh di masa lalu
-        if (selectedDate.getTime() === today.getTime()) {
-            const selectedDateTime = new Date(tanggal);
-            selectedDateTime.setHours(hours, minutes, 0, 0);
-            const now = new Date();
+        if (tanggal) {
+            const selectedDate = new Date(tanggal);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            selectedDate.setHours(0, 0, 0, 0);
             
-            if (selectedDateTime < now) {
-                alert('Tidak dapat memilih waktu yang sudah lampau. Silakan pilih waktu yang akan datang.');
-                document.getElementById('jamMulai').focus();
-                btnSubmit.disabled = false;
-                btnSubmit.textContent = originalText;
-                return;
+            if (selectedDate.getTime() === today.getTime()) {
+                const selectedDateTime = new Date(tanggal);
+                selectedDateTime.setHours(hours, minutes, 0, 0);
+                const now = new Date();
+                
+                if (selectedDateTime < now) {
+                    alert('Tidak dapat memilih waktu yang sudah lampau. Silakan pilih waktu yang akan datang.');
+                    document.getElementById('jamMulai').focus();
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = originalText;
+                    return;
+                }
             }
         }
         
@@ -1542,11 +1557,41 @@
                 // Refresh available labs
                 fetchAvailableLabs();
             } else {
-                throw new Error(response.message || 'Gagal membuat booking');
+                // Tampilkan error message dari backend dengan lebih jelas
+                const errorMsg = response.message || response.errors || 'Gagal membuat booking';
+                let errorText = errorMsg;
+                
+                // Jika errors adalah object, ambil pesan pertama
+                if (typeof errorMsg === 'object' && !Array.isArray(errorMsg)) {
+                    const firstError = Object.values(errorMsg)[0];
+                    errorText = Array.isArray(firstError) ? firstError[0] : firstError;
+                }
+                
+                throw new Error(errorText);
             }
         } catch (error) {
             console.error('Error submitting booking:', error);
-            alert(error.message || 'Gagal membuat booking. Silakan coba lagi.');
+            
+            // Tampilkan error message yang lebih jelas
+            let errorMessage = 'Gagal membuat booking. Silakan coba lagi.';
+            
+            if (error.message) {
+                errorMessage = error.message;
+            } else if (error.errors) {
+                // Jika ada validation errors dari backend
+                const errorKeys = Object.keys(error.errors);
+                if (errorKeys.length > 0) {
+                    errorMessage = error.errors[errorKeys[0]][0] || errorMessage;
+                }
+            } else if (error.response && error.response.errors) {
+                // Handle response errors
+                const errorKeys = Object.keys(error.response.errors);
+                if (errorKeys.length > 0) {
+                    errorMessage = error.response.errors[errorKeys[0]][0] || errorMessage;
+                }
+            }
+            
+            alert(errorMessage);
         } finally {
             // Re-enable button
             btnSubmit.disabled = false;

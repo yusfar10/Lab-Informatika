@@ -20,7 +20,22 @@ class JadwalKelasController extends Controller
         $hanyaTersedia = $request->boolean('hanya_tersedia', false);
         $perMinggu = $request->boolean('per_minggu', false); // Default: per hari
 
-        $selectedDate = Carbon::parse($tanggal);
+        // Validasi format tanggal (YYYY-MM-DD)
+        if ($tanggal && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $tanggal)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Format tanggal tidak valid. Gunakan format YYYY-MM-DD.'
+            ], 400);
+        }
+
+        try {
+            $selectedDate = Carbon::createFromFormat('Y-m-d', $tanggal)->startOfDay();
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tanggal tidak valid: ' . $tanggal
+            ], 400);
+        }
         
         // Determine date range based on per_minggu flag
         if ($perMinggu) {

@@ -411,4 +411,138 @@ class BookingsController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get booking history for authenticated user
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function history(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak terautentikasi'
+                ], 401);
+            }
+
+            // Get filter parameters
+            $status = $request->input('status');
+            
+            // Query bookings for current user
+            // Exclude cancelled bookings
+            $query = Bookings::with([
+                'user:id,name,username,kelas',
+                'jadwalKelas:class_id,class_name,room_id,start_time,end_time,penanggung_jawab,status',
+                'jadwalKelas.laboratorium:room_id,room_name'
+            ])
+            ->where('user_id', $user->id)
+            ->whereHas('jadwalKelas', function ($q) {
+                $q->where('status', '!=', 'cancelled');
+            })
+            ->orderBy('created_at', 'desc');
+
+            // Apply status filter
+            if ($status && $status !== '') {
+                if ($status === 'schedule' || $status === 'aktif' || $status === 'active') {
+                    // Filter untuk aktif: status schedule dan belum lewat
+                    $query->whereHas('jadwalKelas', function ($q) {
+                        $q->where('status', 'schedule')
+                          ->where('end_time', '>', Carbon::now());
+                    });
+                } elseif ($status === 'completed') {
+                    // Filter untuk completed: status completed ATAU sudah lewat waktunya
+                    $query->whereHas('jadwalKelas', function ($q) {
+                        $q->where(function ($subQ) {
+                            $subQ->where('status', 'completed')
+                                 ->orWhere('end_time', '<=', Carbon::now());
+                        });
+                    });
+                }
+                // Skip cancelled bookings dari filter aktif/completed
+            }
+
+            $bookings = $query->get()->map(function ($booking) {
+                $user = $booking->user;
+                $jadwalKelas = $booking->jadwalKelas;
+                
+                $result = [
+                    'booking_id' => $booking->booking_id,
+                    'created_at' => $booking->created_at ? $booking->created_at->toDateTimeString() : null,
+                    'booking_time' => $booking->booking_time ? $booking->booking_time->toDateTimeString() : null,
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'username' => $user->username,
+                        'kelas' => $user->kelas,
+                    ],
+                ];
+
+                if ($jadwalKelas) {
+                    $laboratorium = $jadwalKelas->laboratorium;
+                    
+                    // Tentukan display_status berdasarkan waktu dan status
+                    $now = Carbon::now();
+                    $endTime = $jadwalKelas->end_time ? Carbon::parse($jadwalKelas->end_time) : null;
+                    
+                    // Tentukan display_status berdasarkan waktu dan status
+                    // (Cancelled sudah di-exclude di query awal)
+                    if ($jadwalKelas->status === 'completed') {
+                        $displayStatus = 'completed';
+                    }
+                    // Jika end_time sudah lewat, otomatis jadi completed
+                    elseif ($endTime && $endTime->isPast()) {
+                        $displayStatus = 'completed';
+                    }
+                    // Jika masih schedule dan belum lewat, tetap aktif
+                    else {
+                        $displayStatus = 'aktif';
+                    }
+                    
+                    $result['jadwalKelas'] = [
+                        'class_id' => $jadwalKelas->class_id,
+                        'class_name' => $jadwalKelas->class_name,
+                        'start_time' => $jadwalKelas->start_time ? $jadwalKelas->start_time->toDateTimeString() : null,
+                        'end_time' => $jadwalKelas->end_time ? $jadwalKelas->end_time->toDateTimeString() : null,
+                        'status' => $jadwalKelas->status,
+                    ];
+                    
+                    // Tambahkan display_status untuk frontend
+                    $result['display_status'] = $displayStatus;
+
+                    if ($laboratorium) {
+                        $result['jadwalKelas']['laboratorium'] = [
+                            'room_id' => $laboratorium->room_id,
+                            'room_name' => $laboratorium->room_name,
+                        ];
+                    }
+                }
+
+                return $result;
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $bookings,
+                'message' => 'Booking history retrieved successfully'
+            ], 200);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve booking history', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil riwayat booking',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

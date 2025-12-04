@@ -32,6 +32,10 @@
       transform: translateY(-2px);
       box-shadow: rgba(0,0,0,0.1) 0 4px 8px;
     }
+    /* Smooth transition untuk notification list */
+    #notificationList {
+      transition: opacity 0.3s ease;
+    }
     .badge-category { padding: 5px 12px; border-radius: 6px; color: white; font-size:12px; margin-right:10px; }
     /* Indicator untuk read/unread */
     .read-indicator {
@@ -78,7 +82,7 @@
       </div>
 
       <div class="col-md-4 text-end">
-        <button id="markAllBtn" class="btn btn-primary px-4">Tandai Semua Dibaca</button>
+        <button id="deleteAllBtn" class="btn btn-danger px-4">Hapus Semua Pesan</button>
       </div>
     </div>
 
@@ -95,14 +99,34 @@
     </div>
   </div>
 
+  <!-- Modal Konfirmasi Hapus Semua -->
+  <div class="modal fade" id="deleteAllModal" tabindex="-1" aria-labelledby="deleteAllModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteAllModalLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus semua notifikasi?</p>
+          <p class="text-danger"><strong>Tindakan ini tidak dapat dibatalkan.</strong></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteAllBtn">Hapus Semua</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="mt-4">
     Copyright © Kelompok 1 - Manajemen Proyek
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ asset('js/notification-service.js') }}"></script>
   <script src="{{ asset('js/notification-renderer.js') }}"></script>
   <script src="{{ asset('js/notification-page-full.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

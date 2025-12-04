@@ -47,7 +47,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/notification', [App\Http\Controllers\NotificationController::class, 'index'])->name('notification.index.web');
     Route::get('/api/notification/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notification.unread-count.web');
     Route::put('/api/notification/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notification.mark-all-read.web');
+    Route::delete('/api/notification/delete-all', [App\Http\Controllers\NotificationController::class, 'deleteAll'])->name('notification.delete-all.web');
     Route::put('/api/notification/{id}', [App\Http\Controllers\NotificationController::class, 'update'])->name('notification.update.web');
+    
+    // Booking history route
+    Route::get('/api/bookings/history', [App\Http\Controllers\BookingsController::class, 'history'])->name('bookings.history.web');
 });
 
 Route::get('/mahasiswa/riwayat', function () {

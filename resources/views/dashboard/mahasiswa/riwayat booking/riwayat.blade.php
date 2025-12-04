@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Riwayat Booking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -85,6 +86,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
             /* Jarak antara elemen */
         }
 
@@ -92,6 +94,7 @@
             position: relative;
             flex-grow: 1;
             max-width: 350px;
+            min-width: 200px;
             /* Batasi lebar kolom Search */
         }
 
@@ -111,6 +114,7 @@
 
         .filter-select {
             width: 150px;
+            min-width: 120px;
             /* Atur lebar dropdown filter */
             border-radius: 5px;
         }
@@ -125,7 +129,28 @@
             padding: 8px 20px;
             border: none;
             height: 38px;
+            white-space: nowrap;
             /* Sesuaikan tinggi dengan input */
+        }
+
+        /* Responsive: Mobile */
+        @media (max-width: 768px) {
+            .search-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input-wrapper {
+                max-width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .btn-check-blue {
+                width: 100%;
+            }
         }
 
         /* Style Tabel */
@@ -145,6 +170,23 @@
             color: #555;
             background-color: #f8f9fa;
         }
+
+        /* Truncate text untuk kolom Penggunaan Kelas */
+        .table td.text-truncate-custom {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: help;
+            position: relative;
+        }
+        
+        /* Responsive: Kurangi max-width di mobile */
+        @media (max-width: 768px) {
+            .table td.text-truncate-custom {
+                max-width: 150px;
+            }
+        }
     </style>
 </head>
 
@@ -157,100 +199,45 @@
             <h4 class="fw-bold mb-4">Booking History</h4>
 
             <div class="search-group mb-4">
-
                 <div class="search-input-wrapper">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" id="search-riwayat" placeholder="Search">
                 </div>
 
-                {{-- <select class="form-select filter-select">
-                    <option selected>All</option>
-                    <option>Aktif</option>
-                    <option>Nonaktif</option>
-                </select> --}}
-                <select id="filterStatus" class="form-select filter-select">
+                <input type="date" class="form-control filter-select" id="filter-tanggal-riwayat" style="width: 150px; min-width: 140px;">
+
+                <select id="filter-status-riwayat" class="form-select filter-select">
                     <option value="all">All</option>
-                    <option value="active">Aktif</option>
-                    <option value="inactive">Nonaktif</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="completed">Completed</option>
                 </select>
 
+                <select id="filter-sort-riwayat" class="form-select filter-select">
+                    <option value="newest">Newest</option>
+                    <option value="older">Older</option>
+                </select>
 
-                <button class="btn btn-check-blue">Check</button>
+                <button id="btn-check-riwayat" class="btn btn-check-blue">Check</button>
             </div>
+
+            <div id="loading-riwayat" style="display: none;"></div>
 
 
             <div class="table-responsive">
                 <table class="table table-striped align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Date & Time</th>
+                            <th>Date & Time (Jadwal)</th>
                             <th>Nama Pengguna</th>
                             <th>Ruangan</th>
                             <th>Booking Time</th>
                             <th>Status</th>
+                            <th>Penggunaan Kelas</th>
+                            <th>Waktu Booking Dibuat</th>
                         </tr>
                     </thead>
-                    {{-- <tbody>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 2</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-primary">MK PEMB</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:41:32</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 2</td>
-                            <td>2 SKS</td>
-                            <td><span class="badge-status bg-primary">MK SPK</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>HIMAFOR - EDT</td>
-                            <td>Lab 1</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-danger">ROPOT EDUTECH</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 1</td>
-                            <td>4 SKS</td>
-                            <td><span class="badge-status bg-primary">MK APSI</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 1</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-primary">MK SPK</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 1</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-primary">MK PEMB</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 1</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-primary">MK APSI</span></td>
-                        </tr>
-                        <tr>
-                            <td>2025/11/05 20:44:10</td>
-                            <td>Nama Kosma - 3A</td>
-                            <td>Lab 1</td>
-                            <td>3 SKS</td>
-                            <td><span class="badge-status bg-primary">MK MP</span></td>
-                        </tr>
-                    </tbody> --}}
-                    {{-- <tbody id="riwayat-table-body"></tbody> --}}
                     <tbody id="table-booking">
-                        <!-- akan diisi oleh JS -->
+                        <!-- Data akan diisi oleh JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -261,139 +248,10 @@
         Copyright © Kelompok 1 - Manajemen Proyek
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    {{-- <script type="module">
-        import {
-            fetchRiwayatBookings
-        } from "/js/riwayat-service.js";
-
-        // contoh pakai:
-        fetchRiwayatBookings({
-            status: "completed"
-        }).then(res => {
-            console.log(res);
-        });
-    </script> --}}
-    <script type="module" src="/js/services/api-service.js"></script>
+    <script src="/js/services/api-service.js"></script>
     <script src="/js/notification.js"></script>
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const token = localStorage.getItem("token"); // token JWT
-            const tableBody = document.getElementById("table-booking");
-            const dropdown = document.getElementById("filterStatus");
-
-            let bookings = []; // semua data dari API disimpan disini
-
-            // 1. Load data dari backend
-            async function loadBookings() {
-                try {
-                    const res = await fetch("/api/v1/booking", {
-                        headers: {
-                            "Authorization": `Bearer ${token}`
-                        }
-                    });
-
-                    const data = await res.json();
-                    bookings = data.data; // Laravel paginate => data ada di "data"
-
-                    renderTable(bookings);
-                } catch (err) {
-                    console.error(err);
-                }
-            }
-
-            // 2. Render ulang table berdasarkan list yg dikirim
-            function renderTable(list) {
-                tableBody.innerHTML = "";
-
-                if (list.length === 0) {
-                    tableBody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center text-muted">
-                        Tidak ada data ditemukan
-                    </td>
-                </tr>
-            `;
-                    return;
-                }
-
-                list.forEach((item, index) => {
-                    tableBody.innerHTML += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${item.lab_name}</td>
-                    <td>${item.date}</td>
-                    <td>${item.start_time} - ${item.end_time}</td>
-                    <td>${item.status}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">Detail</button>
-                    </td>
-                </tr>
-            `;
-                });
-            }
-
-            // 3. Event saat dropdown diubah
-            dropdown.addEventListener("change", function() {
-                const value = dropdown.value;
-
-                if (value === "all") {
-                    renderTable(bookings);
-                } else {
-                    const filtered = bookings.filter(item =>
-                        item.status.toLowerCase() === value
-                    );
-                    renderTable(filtered);
-                }
-            });
-
-            // 4. Panggil pertama kali
-            loadBookings();
-        });
-    </script> --}}
-    <script>
-        const dropdown = document.getElementById("filterStatus");
-        const tableBody = document.getElementById("table-booking");
-
-        function loadHistory(status = "all") {
-            fetch(`http://localhost:8000/api/bookings/history?status=${status}`)
-                .then(res => res.json())
-                .then(res => {
-                    if (!res.success) return;
-
-                    const data = res.data;
-                    tableBody.innerHTML = "";
-
-                    data.forEach(item => {
-                        tableBody.innerHTML += `
-                        <tr>
-                            <td>${item.created_at ?? '-'}</td>
-                            <td>${item.user?.name ?? '-'}</td>
-                            <td>${item.jadwal_kelas?.room_name ?? '-'}</td>
-                            <td>${item.jadwal_kelas?.duration ?? '-'}</td>
-                            <td>
-                                <span class="badge-status ${item.status === 'active' ? 'bg-success' : 'bg-secondary'}">
-                                    ${item.status}
-                                </span>
-                            </td>
-                        </tr>
-                    `;
-                    });
-                })
-                .catch(err => console.error(err));
-        }
-
-        // refresh ketika dropdown berubah
-        dropdown.addEventListener("change", () => {
-            loadHistory(dropdown.value);
-        });
-
-        // load default
-        loadHistory();
-    </script>
-
-
-    {{-- <script type="module" src="/js/riwayat-service.js"></script> --}}
-    {{-- <script type="module" src="/js/pages/riwayat.js"></script> --}}
+    <script src="/js/riwayat-service.js"></script>
+    <script src="/js/riwayat-page.js"></script>
 
 </body>
 

@@ -126,5 +126,38 @@ class NotificationController extends Controller
             'count' => $count
         ]);
     }
+
+    // DELETE /api/notification/delete-all
+    public function deleteAll(Request $request)
+    {
+        try {
+            $userId = auth()->id();
+            
+            if (!$userId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak terautentikasi'
+                ], 401);
+            }
+
+            $deleted = Notification::where('user_id', $userId)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Semua notifikasi berhasil dihapus',
+                'deleted_count' => $deleted
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting all notifications', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus semua notifikasi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
 

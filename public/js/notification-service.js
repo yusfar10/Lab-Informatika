@@ -27,13 +27,42 @@ const NotificationService = {
         }
 
         const config = { ...defaultOptions, ...options };
-        const response = await fetch(url, config);
         
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
+        try {
+            console.log('FetchAPI: Request to', url, 'with config:', {
+                method: config.method,
+                hasCSRF: !!config.headers['X-CSRF-TOKEN'],
+                headers: Object.keys(config.headers)
+            });
+            
+            const response = await fetch(url, config);
+            
+            console.log('FetchAPI: Response status:', response.status, response.statusText);
+            
+            // Check if response is ok
+            if (!response.ok) {
+                // Try to get error message from response
+                let errorMessage = `API error: ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                    console.error('FetchAPI: Error response:', errorData);
+                } catch (e) {
+                    // If response is not JSON, use status text
+                    errorMessage = response.statusText || errorMessage;
+                    console.error('FetchAPI: Non-JSON error response');
+                }
+                throw new Error(errorMessage);
+            }
+            
+            // Parse JSON response
+            const data = await response.json();
+            console.log('FetchAPI: Success response:', data);
+            return data;
+        } catch (error) {
+            console.error('FetchAPI: Exception caught:', error);
+            throw error;
         }
-        
-        return await response.json();
     },
 
     async getAll(filters = {}) {
@@ -79,13 +108,33 @@ const NotificationService = {
 
     async markAllRead() {
         try {
+            console.log('NotificationService.markAllRead: Starting...');
+            const csrfToken = this.getCSRFToken();
+            console.log('CSRF Token:', csrfToken ? 'Found' : 'Missing');
+            
             const data = await this.fetchAPI('/api/notification/mark-all-read', {
                 method: 'PUT'
             });
-            return data;
+            
+            console.log('NotificationService.markAllRead: Response received:', data);
+            
+            // Pastikan response memiliki format yang benar
+            if (data && typeof data === 'object') {
+                return data;
+            }
+            // Jika response tidak sesuai format, return success false
+            console.warn('NotificationService.markAllRead: Invalid response format:', data);
+            return {
+                success: false,
+                message: 'Response tidak valid dari server'
+            };
         } catch (e) {
-            console.error("Gagal tandai semua:", e);
-            throw e;
+            console.error("NotificationService.markAllRead: Error:", e);
+            // Return error object instead of throwing
+            return {
+                success: false,
+                message: e.message || 'Gagal menandai semua notifikasi sebagai dibaca'
+            };
         }
     }
 };

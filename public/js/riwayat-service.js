@@ -1,73 +1,100 @@
-// riwayat-service.js
+// /public/js/riwayat-service.js
+// =============================
+//  Riwayat Booking API Service
+// =============================
 
-// Helper fetchAPI (mengikuti helper yang sudah ada pada project lain)
-async function fetchAPI(url, options = {}) {
-    const defaultOptions = {
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document
-                .querySelector('meta[name="csrf-token"]')
-                ?.getAttribute("content"),
-        },
-        credentials: "same-origin",
-    };
+const RiwayatService = {
+    // Get CSRF Token
+    getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.content || '';
+    },
 
-    const finalOptions = { ...defaultOptions, ...options };
+    // Fetch API helper dengan error handling
+    async fetchAPI(url, options = {}) {
+        const defaultOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'same-origin',
+            cache: 'no-store'
+        };
 
-    const response = await fetch(url, finalOptions);
-
-    // Jika unauthorized, mungkin session expired
-    if (response.status === 401) {
-        console.error("Unauthorized! Session expired?");
-    }
-
-    return response.json();
-}
-
-// ------------------------------
-// FETCH RIWAYAT BOOKINGS
-// ------------------------------
-export async function fetchRiwayatBookings(filters = {}) {
-    const params = new URLSearchParams(filters).toString();
-    const url = `/api/bookings/riwayat?${params}`;
-
-    return await fetchAPI(url, {
-        method: "GET",
-    });
-}
-
-/* riwayat-service.js
-   Simple service wrapper to fetch booking history with error handling.
-*/
-
-(function (global) {
-  'use strict';
-
-  // reuse safeFetch if NService available
-  const safeFetch = (window.NService && window.NService.safeFetch) ?
-      window.NService.safeFetch :
-      async function (url, options) {
-        // minimal fallback safeFetch
-        try {
-          const res = await fetch(url, options);
-          const c = res.headers.get('content-type') || '';
-          if (c.includes('application/json')) {
-            return { ok: true, data: await res.json(), status: res.status };
-          } else {
-            const text = await res.text();
-            return { ok: res.ok, text, status: res.status, message: 'Unexpected response' };
-          }
-        } catch (e) {
-          return { ok: false, status: 0, message: 'Koneksi bermasalah' };
+        // Add CSRF token for POST/PUT/DELETE
+        if (options.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method.toUpperCase())) {
+            defaultOptions.headers['X-CSRF-TOKEN'] = this.getCSRFToken();
         }
-      };
 
-  async function fetchRiwayatBookings(filters = {}) {
-    const q = new URLSearchParams(filters).toString();
-    const url = `/api/v1/bookings/history${q ? '?' + q : ''}`;
-    return await safeFetch(url, { method: 'GET' });
-  }
+        const config = { ...defaultOptions, ...options };
 
-  global.RiwayatService = { fetchRiwayatBookings };
+        try {
+            const response = await fetch(url, config);
 
-})(window);
+            // Handle network errors
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({
+                    message: `HTTP error! status: ${response.status}`
+                }));
+
+                // Handle different error status codes
+                if (response.status === 401) {
+                    throw new Error('SESSION_EXPIRED');
+                } else if (response.status === 403) {
+                    throw new Error('Akses ditolak. Anda tidak memiliki izin untuk mengakses data ini.');
+                } else if (response.status === 404) {
+                    throw new Error('Endpoint tidak ditemukan.');
+                } else if (response.status === 500) {
+                    throw new Error('Terjadi kesalahan pada server. Silakan coba lagi nanti.');
+                } else {
+                    throw new Error(errorData.message || `Terjadi kesalahan (Status: ${response.status})`);
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            // Handle network connection errors
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Koneksi bermasalah. Periksa koneksi internet Anda.');
+            }
+            throw error;
+        }
+    },
+
+    // Fetch riwayat bookings dengan filters
+    async fetchRiwayatBookings(filters = {}) {
+        try {
+            // Add cache busting
+            const timestamp = new Date().getTime();
+            filters.t = timestamp;
+
+            const params = new URLSearchParams(filters).toString();
+            const url = `/api/bookings/history?${params}`;
+
+            const data = await this.fetchAPI(url, {
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            return {
+                success: data.success !== false,
+                data: data.success ? (data.data || []) : [],
+                message: data.message || 'Data berhasil diambil'
+            };
+        } catch (error) {
+            console.error('Gagal mengambil riwayat booking:', error);
+            return {
+                success: false,
+                data: [],
+                message: error.message || 'Gagal mengambil data riwayat booking'
+            };
+        }
+    }
+};
+
+// Export untuk global window
+if (typeof window !== 'undefined') {
+    window.RiwayatService = RiwayatService;
+}

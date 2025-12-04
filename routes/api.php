@@ -64,6 +64,7 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
     Route::get('/notification', [NotificationController::class, 'index']);
     Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
     Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::delete('/notification/delete-all', [NotificationController::class, 'deleteAll']);
     Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
 
 
@@ -98,6 +99,7 @@ Route::prefix('v1')->middleware(['jwt.auth'])->group(function () {
     Route::get('/notification', [NotificationController::class, 'index']);
     Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
     Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::delete('/notification/delete-all', [NotificationController::class, 'deleteAll']);
     Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
 
 
@@ -136,6 +138,7 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
     Route::get('/notification', [NotificationController::class, 'index']);
     Route::put('/notification/{id}', [NotificationController::class, 'markAsRead']);
     Route::put('/notification/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::delete('/notification/delete-all', [NotificationController::class, 'deleteAll']);
     Route::get('/notification/unread-count', [NotificationController::class, 'unreadCount']);
 
 
