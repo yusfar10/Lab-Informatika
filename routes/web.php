@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 
 // LOGIN
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -78,6 +80,11 @@ Route::get('/mahasiswa/datail', function () {
 Route::get('/mahasiswa/notifikasi', function () {
     return view('dashboard.mahasiswa.notifikasi.notifikasi');
 })->name('mahasiswa.notifikasi')->middleware('auth');
+
+// PROFILE
+Route::get('/mahasiswa/profil', [ProfileController::class, 'showProfile'])
+    ->name('mahasiswa.profil')
+    ->middleware('auth');
 
 // PASSWORD RESET ROUTES
 Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
