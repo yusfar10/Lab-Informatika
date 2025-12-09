@@ -33,6 +33,24 @@ Route::get('/mahasiswa/dashboard', function () {
     return view('dashboard.mahasiswa');
 })->name('mahasiswa.dashboard')->middleware('auth');
 
+Route::get('/admin/dashboard', function () {
+    return view('dashboard.admin');
+})->name('admin.dashboard')->middleware('auth');
+
+Route::get('/admin/booking', function () {
+    return view('dashboard.admin.booking-admin.booking');
+})->name('admin.booking')->middleware('auth');
+
+Route::get('/admin/laporan', function () {
+    return view('dashboard.admin.laporan.laporan');
+})->name('admin.laporan')->middleware('auth');
+
+Route::get('/admin/sistem', function () {
+    return view('dashboard.admin.sistem.sistem');
+})->name('admin.sistem')->middleware('auth');
+
+
+
 // Dashboard API Routes (Web - menggunakan session auth)
 Route::middleware('auth')->group(function () {
     Route::get('/api/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats.web');

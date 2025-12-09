@@ -10,6 +10,7 @@
         body {
             background-color: #f5f7fa;
             font-family: 'poppins';
+            padding-top: 90px;
         }
 
         nav.navbar {
@@ -19,6 +20,13 @@
         nav.navbar a.nav-link,
         nav.navbar .navbar-brand {
             color: #ffffff !important;
+        }
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
         }
 
         .selamat {
