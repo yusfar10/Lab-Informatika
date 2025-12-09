@@ -43,6 +43,9 @@
       padding: 20px;
       margin-bottom: 20px;
     }
+    .serch-ua{
+      padding-right: 20px;
+    }
 
     .footer {
       background-color: #1a2a40;
@@ -92,6 +95,8 @@
       <div class="d-flex align-items-center gap-2 mb-4">
         <div class="input-group" style="max-width: 300px;">
           <input type="text" class="form-control" placeholder="Search">
+        <div class="input-group serch-ua d-flex" style="max-width: 960px;">
+          <input type="text" class="form-control serch-ua" placeholder="Search">
           <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
         <button class="btn btn-primary">+ Tambah User</button>
@@ -106,6 +111,7 @@
             <p class="mb-2 text-success">Status Aktif • Terakhir Login : 2 jam lalu</p>
             <button class="btn btn-danger btn-action">Nonaktifkan</button>
             <button class="btn btn-primary ">Edit</button>
+            <button class="btn btn-danger">Hapus</button>
           </div>
         </div>
 
@@ -115,6 +121,7 @@
             <p class="mb-1">NIM : <span class="text-primary">2388010006</span></p>
             <p class="mb-2 text-success">Status Nonaktif • Terakhir Login : 2 jam lalu</p>
             <button class="btn btn-success btn-action">Aktifkan</button>
+            <button class="btn btn-primary ">Edit</button>
             <button class="btn btn-danger">Hapus</button>
           </div>
         </div>

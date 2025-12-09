@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin Panel - Booking Lab Informatika</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -28,8 +29,8 @@
         <div class="ms-auto">
             <ul class="navbar-nav d-flex align-items-center">
                 <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="ruangadmin.blade.php">Ruang</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">User</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.ruang') }}">Ruang</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.user') }}">User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Boking</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Sistem</a></li>
@@ -43,7 +44,7 @@
         <!-- Header -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="d-block justify-content-between align-items-center mb-3 pt-5 pb-4">
-                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, Kosma!</h5>
+                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, Admin!</h5>
                 <small class="text-muted ps-5 fs-5">Sistem berjalan normal - terakhir back up: 2 jam lalu</small>
             </div>
         </div>
@@ -74,20 +75,21 @@
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white border-2 d-flex justify-content-between align-items-center">
                 <h6 class="fw-semibold mb-0 f24 p-1">Kelola Ruang</h6>
-                <button class="btn btn-sm btn-primary">+ Tambah Ruang</button>
             </div>
             <div class="card-body">
-                <div class="mb-2 p-2 border rounded bg-light">
+                <div class="mb-2 p-3 border rounded bg-light d-flex justify-content-between align-items-center">
                     <div class="ps-3">
                         <strong>Lab 1</strong><br>
                         <small class="opacity-50">30 PC - Gedung Siber - Lantai 7</small>
                     </div>
+                    <a href="# " class="text-success text-decoration-none">Active</a>
                 </div>
-                <div class="p-2 border rounded bg-light">
+                <div class="mb-2 p-3 border rounded bg-light d-flex justify-content-between align-items-center">
                     <div class="ps-3">
                         <strong>Lab 2</strong><br>
                         <small class="opacity-50">30 PC - Gedung Siber - Lantai 7</small>
                     </div>
+                    <a href="# " class="text-danger text-decoration-none">Non Active</a>
                 </div>
             </div>
         </div>

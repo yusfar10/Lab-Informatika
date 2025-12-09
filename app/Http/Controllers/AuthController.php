@@ -16,29 +16,35 @@ class AuthController extends Controller
     // Proses login
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required',
+        $request->validate([
+            'login' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Cari user berdasarkan email atau username
+        $user = \App\Models\User::where('email', $request->login)
+                                ->orWhere('username', $request->login)
+                                ->first();
+
+        if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+            Auth::login($user);
             $request->session()->regenerate();
 
-            $role = Auth::user()->role;// mengambil user yang login
+            $role = $user->role;
             if ($role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($role === 'user') {
                 return redirect()->route('user.dashboard');
             } elseif ($role === 'mahasiswa') {
-            return redirect()->route('mahasiswa.dashboard'); 
+                return redirect()->route('mahasiswa.dashboard');
             } else {
                 return redirect()->route('guest.dashboard');
             }
         }
 
         return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->onlyInput('username');
+            'login' => 'Email/Username atau password salah.',
+        ])->onlyInput('login');
     }
 
     // Proses logout

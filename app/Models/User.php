@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+//import
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -19,10 +22,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'role',
         'status',
         'password',
+        'semester',
+        'kelas',
+        'no_hp',
     ];
 
     /**
@@ -35,6 +42,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -46,5 +54,45 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getJWTIdentifier(): mixed{
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array{
+        return [];
+    }
+
+    public function getAuthIdentifierName(){
+        return 'id';
+    }
+
+    public function getAuthIdentifier(){
+        return $this->getKey();
+    }
+
+    public function getAuthPassword(){
+        return $this->password;
+    }
+
+    public function getRememberToken(){
+        return $this->remember_token;
+    }
+
+    public function setRememberToken($value){
+        $this->remember_token = $value;
+    }
+
+    public function getRememberTokenName(){
+        return 'remember_token';
+    }
+
+    /**
+     * Get the bookings for the user.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Bookings::class, 'user_id', 'id');
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id('id');
             $table->string('name');
             $table->string('username')->nullable();
             $table->string('email')->unique();
@@ -20,6 +20,9 @@ return new class extends Migration
             $table->enum('role', ['admin', 'dosen', 'mahasiswa'])->default('mahasiswa');
             $table->enum('status', ['verity', 'active', 'banned'])->default('verity');
             $table->string('password');
+            $table->string('semester')->nullable(); // atau integer, sesuai kebutuhan
+            $table->string('kelas')->nullable();
+            $table->string('no_hp')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
