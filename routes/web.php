@@ -84,6 +84,10 @@ Route::get('/mahasiswa/jadwal-kuliah', function () {
     return view('dashboard.mahasiswa.jadwal-kuliah.jadwal');
 })->name('mahasiswa.jadwal-kuliah')->middleware('auth');
 
+Route::get('/mahasiswa/profil', function () {
+    return view('dashboard.mahasiswa.profil.profil');
+})->name('mahasiswa.profil')->middleware('auth');
+
 Route::get('/guest/dashboard', function () {
     return view('dashboard.guest.guest');
 })->name('guest.dashboard')->middleware('auth');
