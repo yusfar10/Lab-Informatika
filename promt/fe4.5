@@ -1,0 +1,44 @@
+Tugas Implementasi: Link "Lihat Detail" & Paginasi Notifikasi
+Berdasarkan user story dan deskripsi di atas (Trello card: 4.5 Implementasi Link "Lihat Detail" & Paginasi (Optional)), implementasikan feature berikut pada halaman notifikasi:
+
+1. Implementasi Link "Lihat Detail" Dinamis (Wajib)
+Link "Lihat Detail" pada setiap kartu notifikasi harus dinamis dan mengarah ke halaman detail yang sesuai berdasarkan jenis notifikasi.
+
+Edit Function renderNotification:
+
+Ubah hardcoded href="#" pada link "Lihat Detail" menjadi URL dinamis.
+
+Buat Function getDetailUrl(notificationData):
+
+Buat fungsi baru untuk men-generate URL berdasarkan properti type dan related_id dari data notifikasi.
+
+Logika Mapping URL:
+
+Jika type adalah booking: Arahkan ke route detail booking (misalnya /mahasiswa/detail/booking_id=... atau route yang sesuai).
+
+Jika type adalah announcement: Arahkan ke route detail pengumuman (opsional, atau tetap # jika tidak ada halaman detail khusus).
+
+Jika type adalah warning: Arahkan ke route detail booking terkait (gunakan related_id jika tersedia).
+
+Jika type adalah schedule_change: Arahkan ke route detail jadwal atau booking terkait.
+
+2. Implementasi Paginasi Notifikasi (Optional/Jika Diperlukan)
+Implementasi paginasi untuk notifikasi yang jumlahnya banyak (lebih dari 10) agar halaman tidak lambat dan mudah dibaca.
+
+Struktur HTML:
+
+Buat container HTML untuk kontrol paginasi di bawah daftar notifikasi (notification list).
+
+Buat Function renderPagination(metaData):
+
+Buat fungsi untuk me-render kontrol paginasi (Previous, Next, Page Numbers).
+
+Fungsi Tombol Paginasi:
+
+Buat event listener untuk tombol paginasi.
+
+Pastikan filter aktif tetap terjaga saat navigasi paginasi.
+
+Kondisi Tampil:
+
+Kontrol paginasi harus di-disable atau disembunyikan jika hanya ada 1 halaman notifikasi.

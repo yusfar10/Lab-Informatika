@@ -1,3 +1,31 @@
+# Laravel / PHP
+/vendor/
+.env
+.env.*
+/node_modules/
+composer.lock.bak
+
+# Laravel storage (except important files)
+/storage/*.key
+/storage/app/public/*
+!/storage/app/public/.gitignore
+
+# Cache & Logs
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# IDE / Editor (biar tidak ikut ter-push)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
 # Playwright
 /test-results/
 /playwright-report/

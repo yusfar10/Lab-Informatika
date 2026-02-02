@@ -6,24 +6,18 @@
     <title>Admin Panel - Kelola Ruang</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        html,body{
+            height: 100%;
+        }
         body {
             background-color: #f4f6f9;
             font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .navbar {
-            background-color: #22304A;
-        }
-        .navbar-brand img {
-            width: 40px;
-            height: 40px;
-        }
-        .navbar-nav .nav-link {
-            color: #fff !important;
-            font-weight: 500;
-            margin-right: 20px;
-        }
-        .navbar-nav .nav-link.active {
-            color: #00AEEF !important;
+        #main-wrapper{
+            flex: 1;
         }
         .content-box {
             background: #fff;
@@ -66,34 +60,15 @@
             color: white;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('template-dashboard/style/dash-admin.css') }}">
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="/images/logo.png" alt="Logo">
-                <span class="text-white ms-2 fw-bold">ADMIN PANEL</span>
-            </a>
-            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Ruang</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">User</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Sistem</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+@include('dashboard.nav.nav-admin')
 
     <!-- Main Content -->
-    <div class="container my-4">
+    <div class="container my-4" id="main-wrapper">
         <div class="content-box">
             <h5 class="fw-bold">Kelola Ruang</h5>
             <p>Tambah, edit, atau nonaktifkan ruang - update langsung ke user</p>

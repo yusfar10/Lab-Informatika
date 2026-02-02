@@ -11,22 +11,16 @@
 
 
   <style>
+    html,body{
+            height: 100%;
+    }
     body {
       background-color: #f4f6f9;
       font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-
-    /* ✅ Navbar */
-    .navbar {
-      background-color: #1a2a40;
-    }
-    .navbar a {
-      color: white !important;
-    }
-    .navbar a:hover {
-      color: #00bcd4 !important;
-    }
-
     /* ✅ Kotak konten */
     .content-box {
       background: white;
@@ -48,43 +42,34 @@
     }
 
     .footer {
-      background-color: #1a2a40;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 68px;
-    }
+    background-color: #1a2a40;
+    color: white;
+    text-align: center;
+    padding: 15px;
+  }
 
     .btn-action {
       margin-right: 8px;
     }
+    #wrapper {
+      flex: 1;
+    }
+    
+    .navbar {
+    display: flex;
+    align-items: center;
+    background: white;
+}
   </style>
+  <link rel="stylesheet" href="{{ asset('template-dashboard/style/dash-admin.css') }}">
 </head>
 <body>
 
   <!-- ✅ NAVBAR -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="../LogoInformatics.png" alt="Logo" width="40" class="me-2">
-        <span>ADMIN PANEL</span>
-      </a>
-
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Ruang</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#">User</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Booking</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Sistem</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+@include('dashboard.nav.nav-admin')
 
   <!-- ✅ KONTEN UTAMA -->
-  <div class="container mt-4">
+  <div class="container mt-4" id="wrapper">
     <div class=" border-2 ">
       <div class="content-box p-3 mb-3">
         <h4 class="fw-bold mb-1">User</h4>
@@ -93,10 +78,15 @@
 
       <!-- ✅ Kolom search dan tombol tambah -->
       <div class="d-flex align-items-center gap-2 mb-4">
+        <div class="input-group" style="max-width: 300px;">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+
         <div class="input-group serch-ua d-flex" style="max-width: 960px;">
           <input type="text" class="form-control serch-ua" placeholder="Search">
           <span class="input-group-text"><i class="bi bi-search"></i></span>
         </div>
+
         <button class="btn btn-primary">+ Tambah User</button>
       </div>
 
