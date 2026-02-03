@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Alias middleware dari remote
         $middleware->alias([
             'semester' => \App\Http\Middleware\SemesterMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

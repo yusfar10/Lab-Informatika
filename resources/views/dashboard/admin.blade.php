@@ -29,29 +29,38 @@
         <!-- Header -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="d-block justify-content-between align-items-center mb-3 pt-5 pb-4">
-                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, Admin!</h5>
+                <h5 class="fw-bold mb-0 ps-5 selamat">Selamat Datang, {{ auth()->user()->name }}</h5>
                 <small class="text-muted ps-5 fs-5">Sistem berjalan normal - terakhir back up: 2 jam lalu</small>
             </div>
         </div>
 
         <!-- Statistik -->
         <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center p-3">
-                    <h6 class="text-muted mb-1">Total Peminjaman</h6>
-                    <h3 class="fw-bold text-primary">127</h3>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <h6 class="text-secondary fw-bold mb-3">Total Ruang</h6>
+                    <h2 class="fw-bold" style="color: #0d6efd;">10</h2>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center p-3">
-                    <h6 class="text-muted mb-2">Kelas Paling Banyak Booking</h6>
-                    <h5 class="fw-bold text-primary mb-3">Lab Informatika 2</h5>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <h6 class="text-secondary fw-bold mb-3">Total User</h6>
+                    <h2 class="fw-bold" style="color: #6c757d;">127</h2>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm text-center p-3">
-                    <h6 class="text-muted mb-1">Jumlah Peminjaman Bulan Ini</h6>
-                    <h3 class="fw-bold text-primary">18</h3>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <h6 class="text-secondary fw-bold mb-3">Booking Hari Ini</h6>
+                    <h2 class="fw-bold" style="color: #198754;">35</h2>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <h6 class="text-secondary fw-bold mb-3">Error Rate</h6>
+                    <h2 class="fw-bold" style="color: #fd7e14;">0,2%</h2>
                 </div>
             </div>
         </div>

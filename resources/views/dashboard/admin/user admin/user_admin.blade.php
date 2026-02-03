@@ -69,7 +69,7 @@
 @include('dashboard.nav.nav-admin')
 
   <!-- ✅ KONTEN UTAMA -->
-  <div class="container mt-4" id="wrapper">
+  <div class="container mt-4 p-4 " id="wrapper" >
     <div class=" border-2 ">
       <div class="content-box p-3 mb-3">
         <h4 class="fw-bold mb-1">User</h4>
@@ -77,11 +77,7 @@
       </div>
 
       <!-- ✅ Kolom search dan tombol tambah -->
-      <div class="d-flex align-items-center gap-2 mb-4">
-        <div class="input-group" style="max-width: 300px;">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-
+      <div class="d-flex justify-content-between gap-3 mb-4">
         <div class="input-group serch-ua d-flex" style="max-width: 960px;">
           <input type="text" class="form-control serch-ua" placeholder="Search">
           <span class="input-group-text"><i class="bi bi-search"></i></span>

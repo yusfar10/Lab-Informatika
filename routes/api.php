@@ -145,4 +145,8 @@ Route::prefix('v1')->middleware(['auth:api'])->group(function () {
 });
 
 
-
+Route::middleware(['api', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return response()->json(['message' => 'Admin OK']);
+    });
+});

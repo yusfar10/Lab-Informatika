@@ -15,6 +15,24 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // kalau belum ada role yang diminta, lanjut saja
+        if ($role === null) {
+            return $next($request);
+        }
+
+        // pastikan user login
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        // cek role user
+        if (auth()->user()->role !== $role) {
+            return response()->json([
+                'message' => 'Forbidden: role tidak sesuai'
+            ], 403);
+        }
         return $next($request);
     }
 }
